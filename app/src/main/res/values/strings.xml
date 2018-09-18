@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">DoctorPatientApp</string>
+    <string name="default_nav_bar_text">Patient Name</string>
+    <string name="menu_item_1_patient">Patient Profile</string>
+    <string name="menu_item_2_patient">Medical Condition</string>
+    <string name="menu_item_3_patient">Consult a Doctor</string>
+    <string name="menu_item_4_patient">Facilities near me</string>
+    <string name="menu_item_5_patient">Doctor\'s Feedback</string>
+    <string name="menu_item_6_patient">Log out</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+</resources>
