@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.softwareapp.group9.doctorpatientapp">
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="com.androidtutorialpoint.mymapsappsdirection.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity" android:theme="@style/StandardTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCBjgGHRHdPwt6l4gitxn9bIFhuzUUQJQk" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/StandardTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +33,7 @@
         </activity>
         <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
         <activity android:name=".userprofile.PatientProfileActivity"/>
-        <activity android:name=".userprofile.DoctorProfileActivity" android:theme="@style/StandardTheme" />
+        <activity android:name=".userprofile.DoctorProfileActivity" android:theme="@style/StandardTheme" android:label="Map"/>
         <activity android:name=".medicalcondition.ViewMedicalConditionActivity" />
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
