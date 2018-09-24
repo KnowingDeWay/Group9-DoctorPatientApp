@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">DoctorPatientApp</string>
+    <string name="medical_condition_add_button">Add Condition</string>
+    <string name="add_medical_condition_field_1">Title:</string>
+    <string name="add_medical_condition_field_2">Description:</string>
+    <string name="add_medical_condition_edit_field_1">Title</string>
+    <string name="add_medical_condition_edit_field_2">Description</string>
+    <string name="add_medical_condition_cancel_button">Cancel</string>
+    <string name="add_medical_condition_delete_button">Delete Condition</string>
     <string name="default_nav_bar_text">Patient Name</string>
     <string name="menu_item_1_patient">Patient Profile</string>
     <string name="menu_item_2_patient">Medical Condition</string>

@@ -8,9 +8,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.consultdoctor.ConsultDoctorActivity;
@@ -18,12 +28,20 @@ import com.softwareapp.group9.doctorpatientapp.doctorfeedback.DoctorFeedbackActi
 import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.FacilitiesNearMeActivity;
 import com.softwareapp.group9.doctorpatientapp.userprofile.PatientProfileActivity;
 
+import java.util.ArrayList;
+
 public class ViewMedicalConditionActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private ArrayList<MedicalCondition> list;
+    private RecyclerView recyclerView;
+    private ViewMedicalConditionAdapter adapter;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private Toolbar mToolbar;
     private NavigationView navigationView;
+    private FirebaseDatabase database;
+    private FirebaseAuth auth;
+    private FirebaseOptions options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +54,52 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        list = new ArrayList<>();
+        database = FirebaseDatabase.getInstance();
+        readDatabase();
+        adapter = new ViewMedicalConditionAdapter(this, list);
+        recyclerView.setAdapter(adapter);
         navigationView = (NavigationView) findViewById(R.id.patientNv);
         navigationView.setNavigationItemSelectedListener(this);
         setTitle("View Medical Conditions");
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        readDatabase();
+        recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ViewMedicalConditionAdapter(this, list);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void readDatabase(){
+        DatabaseReference reference = database.getReference("MedicalConditions");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    MedicalCondition condition = snapshot.getValue(MedicalCondition.class);
+                    list.add(condition);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                databaseError.toException().printStackTrace();
+            }
+        });
+    }
+
+    public void loadAddConditionScreen(View view){
+        Intent intent = new Intent(ViewMedicalConditionActivity.this, AddMedicalConditionActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -23,6 +23,7 @@
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
         <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
+        <activity android:name=".medicalcondition.AddMedicalConditionActivity" android:theme="@style/StandardTheme"></activity>
     </application>
 
 </manifest>
