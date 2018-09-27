@@ -9,4 +9,5 @@
     <string name="menu_item_6_patient">Log out</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="change_photo_dialog">ChangePhotoDialog</string>
 </resources>
