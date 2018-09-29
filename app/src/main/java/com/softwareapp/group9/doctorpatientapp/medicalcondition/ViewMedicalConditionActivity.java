@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.softwareapp.group9.doctorpatientapp.FirebaseSecurity.SecureEncrypter;
 import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.consultdoctor.ConsultDoctorActivity;
@@ -42,6 +43,7 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private FirebaseOptions options;
+    private SecureEncrypter encryptionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +56,18 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         list = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
         readDatabase();
+        recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ViewMedicalConditionAdapter(this, list);
         recyclerView.setAdapter(adapter);
         navigationView = (NavigationView) findViewById(R.id.patientNv);
         navigationView.setNavigationItemSelectedListener(this);
+        encryptionManager = SecureEncrypter.getInstance();
+        System.out.println("List size is :" + list.size());
         setTitle("View Medical Conditions");
     }
 
@@ -85,9 +89,19 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    MedicalCondition condition = snapshot.getValue(MedicalCondition.class);
+                    MedicalCondition conditionToDecrypt = snapshot.getValue(MedicalCondition.class);
+                    String id = conditionToDecrypt.getConditionId();
+                    String conditionName = conditionToDecrypt.getConditionTitle();
+                    String conditionDescription = conditionToDecrypt.getConditionDescription();
+                    ArrayList<String> stringsToDescrypt = new ArrayList<>();
+                    stringsToDescrypt.add(id);
+                    stringsToDescrypt.add(conditionName);
+                    stringsToDescrypt.add(conditionDescription);
+                    ArrayList<String> decryptedStrings = encryptionManager.getDecryptedStrings(stringsToDescrypt);
+                    MedicalCondition condition = new MedicalCondition(decryptedStrings.get(0), decryptedStrings.get(1), decryptedStrings.get(2));
                     list.add(condition);
                 }
+                adapter.notifyDataSetChanged();
             }
 
             @Override

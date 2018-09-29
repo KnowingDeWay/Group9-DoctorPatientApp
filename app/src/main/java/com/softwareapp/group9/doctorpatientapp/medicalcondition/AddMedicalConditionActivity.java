@@ -9,7 +9,10 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.softwareapp.group9.doctorpatientapp.FirebaseSecurity.SecureEncrypter;
 import com.softwareapp.group9.doctorpatientapp.R;
+
+import java.util.ArrayList;
 
 public class AddMedicalConditionActivity extends AppCompatActivity {
 
@@ -17,6 +20,7 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
     private EditText addConidtionDescEt;
     private FirebaseDatabase database;
     private DatabaseReference reference;
+    private SecureEncrypter encrypter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,7 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("MedicalConditions");
+        encrypter = SecureEncrypter.getInstance();
         setTitle("Add Medical Condition");
     }
 
@@ -56,7 +61,12 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
             }
         } else {
             String id = reference.push().getKey();
-            MedicalCondition condition = new MedicalCondition(id, conditionTitle, conditionDescription);
+            ArrayList<String> stringsToEncrypt = new ArrayList<>();
+            stringsToEncrypt.add(id);
+            stringsToEncrypt.add(conditionTitle);
+            stringsToEncrypt.add(conditionDescription);
+            ArrayList<String> encryptedStrings = encrypter.getEncryptedStrings(stringsToEncrypt);
+            MedicalCondition condition = new MedicalCondition(encryptedStrings.get(0), encryptedStrings.get(1), encryptedStrings.get(2));
             reference.child(id).setValue(condition);
             finish();
         }

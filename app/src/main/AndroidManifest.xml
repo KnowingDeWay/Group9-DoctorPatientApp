@@ -19,11 +19,15 @@
         <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
         <activity android:name=".userprofile.PatientProfileActivity"/>
         <activity android:name=".userprofile.DoctorProfileActivity" android:theme="@style/StandardTheme" />
-        <activity android:name=".medicalcondition.ViewMedicalConditionActivity" />
+        <activity android:name=".medicalcondition.ViewMedicalConditionActivity" android:screenOrientation="portrait" />
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
-        <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
-        <activity android:name=".medicalcondition.AddMedicalConditionActivity" android:theme="@style/StandardTheme"></activity>
+        <activity android:name=".doctorfeedback.DoctorFeedbackActivity">
+
+        </activity>
+        <activity android:name=".medicalcondition.AddMedicalConditionActivity" android:theme="@style/StandardTheme" android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

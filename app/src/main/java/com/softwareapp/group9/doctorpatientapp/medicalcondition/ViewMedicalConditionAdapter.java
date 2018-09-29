@@ -4,29 +4,38 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.softwareapp.group9.doctorpatientapp.FirebaseSecurity.SecureEncrypter;
 import com.softwareapp.group9.doctorpatientapp.R;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class ViewMedicalConditionAdapter extends RecyclerView.Adapter<ViewMedicalConditionAdapter.ViewMedicalConditionViewHolder> {
 
     private Context context;
     private ArrayList<MedicalCondition> list;
     private FirebaseDatabase database;
+    private SecureEncrypter encryptionManager;
 
     public ViewMedicalConditionAdapter(Context context, ArrayList<MedicalCondition> list){
         this.context = context;
         this.list = list;
         database = FirebaseDatabase.getInstance();
+        encryptionManager = SecureEncrypter.getInstance();
     }
 
     @Override
@@ -64,15 +73,24 @@ public class ViewMedicalConditionAdapter extends RecyclerView.Adapter<ViewMedica
             deleteConditionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DatabaseReference reference = database.getReference("MedicalConditions").orderByKey().equalTo(list.get(getAdapterPosition()).getConditionId()).getRef();
-                    reference.push();
-                    reference.removeValue(new DatabaseReference.CompletionListener() {
+                    MedicalCondition condition = list.get(getAdapterPosition());
+                    String encryptedId = encryptionManager.encryptData(condition.getConditionId());
+                    DatabaseReference reference = database.getReference();
+                    Query query = reference.child("MedicalConditions").orderByChild("conditionId").equalTo(encryptedId);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                                snapshot.getRef().removeValue();
+                            }
+                        }
 
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.e(TAG, "onCancelled", databaseError.toException());
                         }
                     });
-                    list.remove(list.get(getAdapterPosition()));
+                    list.remove(condition);
                     notifyDataSetChanged();
                 }
             });
