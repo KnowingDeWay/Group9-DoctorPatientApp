@@ -1,5 +1,7 @@
 package com.softwareapp.group9.doctorpatientapp.medicalcondition;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -60,15 +62,23 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
                 showDialogBox("Please enter description of medical condition", "Error");
             }
         } else {
-            String id = reference.push().getKey();
-            ArrayList<String> stringsToEncrypt = new ArrayList<>();
-            stringsToEncrypt.add(id);
-            stringsToEncrypt.add(conditionTitle);
-            stringsToEncrypt.add(conditionDescription);
-            ArrayList<String> encryptedStrings = encrypter.getEncryptedStrings(stringsToEncrypt);
-            MedicalCondition condition = new MedicalCondition(encryptedStrings.get(0), encryptedStrings.get(1), encryptedStrings.get(2));
-            reference.child(id).setValue(condition);
-            finish();
+            if(isConnected()){
+                try{
+                    String id = reference.push().getKey();
+                    ArrayList<String> stringsToEncrypt = new ArrayList<>();
+                    stringsToEncrypt.add(id);
+                    stringsToEncrypt.add(conditionTitle);
+                    stringsToEncrypt.add(conditionDescription);
+                    ArrayList<String> encryptedStrings = encrypter.getEncryptedStrings(stringsToEncrypt);
+                    MedicalCondition condition = new MedicalCondition(encryptedStrings.get(0), encryptedStrings.get(1), encryptedStrings.get(2));
+                    reference.child(id).setValue(condition);
+                    finish();
+                } catch(Exception e){
+                    showRetryDialogBox("Unable to add medical condition!", "Error");
+                }
+            } else {
+                showRetryDialogBox("No Internet COnnection Detected!", "Error");
+            }
         }
     }
 
@@ -77,5 +87,18 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
         customDialog.setDialogText(message);
         customDialog.setCustomTitle(title);
         customDialog.show(getSupportFragmentManager(), title);
+    }
+
+    public void showRetryDialogBox(String message, String title) {
+        FinishCustomDialogBox customDialog = new FinishCustomDialogBox();
+        customDialog.setDialogText(message);
+        customDialog.setCustomTitle(title);
+        customDialog.setTiedActivity("AddMedicalCondition");
+        customDialog.show(getSupportFragmentManager(), title);
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }

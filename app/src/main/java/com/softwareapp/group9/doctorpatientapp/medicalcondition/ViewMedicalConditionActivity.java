@@ -1,6 +1,9 @@
 package com.softwareapp.group9.doctorpatientapp.medicalcondition;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -58,7 +61,6 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         list = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
-        readDatabase();
         recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -72,43 +74,23 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
     }
 
     @Override
-    protected void onStart(){
-        super.onStart();
+    protected void onResume(){
+        super.onResume();
         readDatabase();
-        recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ViewMedicalConditionAdapter(this, list);
-        recyclerView.setAdapter(adapter);
     }
 
     public void readDatabase(){
-        DatabaseReference reference = database.getReference("MedicalConditions");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    MedicalCondition conditionToDecrypt = snapshot.getValue(MedicalCondition.class);
-                    String id = conditionToDecrypt.getConditionId();
-                    String conditionName = conditionToDecrypt.getConditionTitle();
-                    String conditionDescription = conditionToDecrypt.getConditionDescription();
-                    ArrayList<String> stringsToDescrypt = new ArrayList<>();
-                    stringsToDescrypt.add(id);
-                    stringsToDescrypt.add(conditionName);
-                    stringsToDescrypt.add(conditionDescription);
-                    ArrayList<String> decryptedStrings = encryptionManager.getDecryptedStrings(stringsToDescrypt);
-                    MedicalCondition condition = new MedicalCondition(decryptedStrings.get(0), decryptedStrings.get(1), decryptedStrings.get(2));
-                    list.add(condition);
-                }
-                adapter.notifyDataSetChanged();
+        if(isConnected()){
+            try{
+                DatabaseReference reference  = database.getReference("MedicalConditions");
+                AsyncTask<ViewMedicalConditionActivity, Void, ArrayList<MedicalCondition>> task = new Downloader(ViewMedicalConditionActivity.this, database, reference);
+                task.execute(ViewMedicalConditionActivity.this);
+            } catch(Exception e){
+                showRetryDialogBox("Cannot connect to Database!" , "Error");
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                databaseError.toException().printStackTrace();
-            }
-        });
+        } else {
+            showRetryDialogBox("No Internet Connection Detected!", "Error");
+        }
     }
 
     public void loadAddConditionScreen(View view){
@@ -141,4 +123,101 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
         layout.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void setList(ArrayList<MedicalCondition> list){
+        this.list.clear();
+        this.list.addAll(list);
+        recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ViewMedicalConditionAdapter(this, list);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void showDialogBox(String message, String title) {
+        CustomDialogBoxActivity customDialog = new CustomDialogBoxActivity();
+        customDialog.setDialogText(message);
+        customDialog.setCustomTitle(title);
+        customDialog.show(getSupportFragmentManager(), title);
+    }
+
+    public void showRetryDialogBox(String message, String title) {
+        FinishCustomDialogBox customDialog = new FinishCustomDialogBox();
+        customDialog.setDialogText(message);
+        customDialog.setCustomTitle(title);
+        customDialog.setTiedActivity("ViewMedicalCondition");
+        customDialog.show(getSupportFragmentManager(), title);
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    static class Downloader extends AsyncTask<ViewMedicalConditionActivity, Void, ArrayList<MedicalCondition>>{
+
+        ViewMedicalConditionActivity activity;
+        final LoadingDataActivity dialog = new LoadingDataActivity();
+        FirebaseDatabase database;
+        DatabaseReference reference;
+
+        Downloader(ViewMedicalConditionActivity activity, FirebaseDatabase database, DatabaseReference reference){
+            this.activity = activity;
+            this.database = database;
+            this.reference = reference;
+        }
+
+        @Override
+        protected ArrayList<MedicalCondition> doInBackground(ViewMedicalConditionActivity... activities){
+            activity = activities[0];
+            final ArrayList<MedicalCondition> list = new ArrayList<>();
+            final SecureEncrypter encryptionManager = SecureEncrypter.getInstance();
+            reference.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    list.clear();
+                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                        MedicalCondition conditionToDecrypt = snapshot.getValue(MedicalCondition.class);
+                        String id = conditionToDecrypt.getConditionId();
+                        String conditionName = conditionToDecrypt.getConditionTitle();
+                        String conditionDescription = conditionToDecrypt.getConditionDescription();
+                        ArrayList<String> stringsToDecrypt = new ArrayList<>();
+                        stringsToDecrypt.add(id);
+                        stringsToDecrypt.add(conditionName);
+                        stringsToDecrypt.add(conditionDescription);
+                        ArrayList<String> decryptedStrings = encryptionManager.getDecryptedStrings(stringsToDecrypt);
+                        MedicalCondition condition = new MedicalCondition(decryptedStrings.get(0), decryptedStrings.get(1), decryptedStrings.get(2));
+                        list.add(condition);
+                    }
+                    activity.setList(list);
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    databaseError.toException().printStackTrace();
+                }
+            });
+            return list;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setDialogText("Loading Medical Conditions...");
+            dialog.show(activity.getSupportFragmentManager(), "Loading");
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<MedicalCondition> list) {
+            super.onPostExecute(list);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+    }
+
 }
