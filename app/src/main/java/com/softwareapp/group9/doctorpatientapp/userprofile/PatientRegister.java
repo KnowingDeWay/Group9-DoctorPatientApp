@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
 
 public class PatientRegister extends AppCompatActivity implements View.OnClickListener{
 
@@ -78,15 +79,17 @@ public class PatientRegister extends AppCompatActivity implements View.OnClickLi
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
+                            progressDialog.dismiss();
                             if(task.isSuccessful()){
                                 //user is successfully registered and logged in
 
-                                Toast.makeText(PatientRegister.this, "Registered Successfully", Toast.LENGTH_SHORT). show();
+                                //Toast.makeText(PatientRegister.this, "Registered Successfully", Toast.LENGTH_SHORT). show();
+                                showBackDialog("Notice", "Registration Successful!");
                             }
 
                             else{
-                                Toast.makeText(PatientRegister.this, "Could not register", Toast.LENGTH_SHORT). show();
+                                //Toast.makeText(PatientRegister.this, "Could not register", Toast.LENGTH_SHORT). show();
+                                showDialog("Error", "Registration Failed! The account may already exist");
                             }
                         }
 
@@ -102,5 +105,19 @@ public class PatientRegister extends AppCompatActivity implements View.OnClickLi
         }
 
 
+    }
+
+    public void showDialog(String title, String message){
+        CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
+    }
+
+    public void showBackDialog(String title, String message){
+        BackDialogActivity dialog = new BackDialogActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
     }
 }

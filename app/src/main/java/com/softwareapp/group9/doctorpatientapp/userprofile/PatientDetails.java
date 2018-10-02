@@ -3,6 +3,7 @@ package com.softwareapp.group9.doctorpatientapp.userprofile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
 
 public class PatientDetails extends AppCompatActivity implements View.OnClickListener {
 
@@ -66,13 +68,19 @@ public class PatientDetails extends AppCompatActivity implements View.OnClickLis
         String weight = regWeight.getText().toString().trim();
         String address = regAddress.getText().toString().trim();
 
-        PatientInformation patientInformation = new PatientInformation(surname,otherName,gender,age,height,weight,address);
+        if(TextUtils.isEmpty(surname) || TextUtils.isEmpty(otherName) || TextUtils.isEmpty(gender) || TextUtils.isEmpty(age) || TextUtils.isEmpty(height)
+                || TextUtils.isEmpty(weight) || TextUtils.isEmpty(address)){
+            showDialog("Error", "Please fill out all fields!");
+        } else {
+            PatientInformation patientInformation = new PatientInformation(surname,otherName,gender,age,height,weight,address);
 
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        patientInformation.id = user.getUid();
-        databaseReference.child(user.getUid()).setValue(patientInformation);
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            patientInformation.id = user.getUid();
+            databaseReference.child(user.getUid()).setValue(patientInformation);
 
-        Toast.makeText(this, "Patient details saved...", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Patient details saved...", Toast.LENGTH_LONG).show();
+            showContinueDialog("Notice", "Patient Details Saved!");
+        }
     }
 
     @Override
@@ -90,5 +98,26 @@ public class PatientDetails extends AppCompatActivity implements View.OnClickLis
         }
 
 
+    }
+
+    public void showDialog(String title, String message){
+        CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
+    }
+
+    public void showBackDialog(String title, String message){
+        BackDialogActivity dialog = new BackDialogActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
+    }
+
+    public void showContinueDialog(String title, String message){
+        ContinueToProfileDialogBox dialog = new ContinueToProfileDialogBox();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
     }
 }

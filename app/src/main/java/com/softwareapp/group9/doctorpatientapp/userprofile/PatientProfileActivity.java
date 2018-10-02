@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.consultdoctor.ConsultDoctorActivity;
@@ -24,6 +26,8 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
     private ActionBarDrawerToggle mToggle;
     private Toolbar mToolbar;
     private NavigationView navigationView;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,12 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView = (NavigationView) findViewById(R.id.patientNv);
         navigationView.setNavigationItemSelectedListener(this);
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        if(user == null){
+            finish();
+            startActivity(new Intent(this, PatientLogin.class));
+        }
         setTitle("Patient Profile");
     }
 
@@ -60,7 +70,12 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
             case R.id.nav_consult: Intent intent3 = new Intent(this, ConsultDoctorActivity.class); startActivity(intent3); break;
             case R.id.nav_facilities: Intent intent4 = new Intent(this, FacilitiesNearMeActivity.class); startActivity(intent4); break;
             case R.id.nav_feedback: Intent intent5 = new Intent(this, DoctorFeedbackActivity.class); startActivity(intent5); break;
-            case R.id.nav_logout: Intent closingIntent = new Intent(getApplicationContext(), LaunchScreen.class); closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); startActivity(closingIntent); break;
+            case R.id.nav_logout:
+                Intent closingIntent = new Intent(getApplicationContext(), LaunchScreen.class);
+                closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                auth.signOut();
+                startActivity(closingIntent);
+                break;
         }
         DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout_patient);
         layout.closeDrawer(GravityCompat.START);
