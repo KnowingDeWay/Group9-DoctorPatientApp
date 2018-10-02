@@ -12,6 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.softwareapp.group9.doctorpatientapp.R;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +33,7 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
     private EditText patientLoginPassword;
     private Toolbar mToolbar;
     private ProgressDialog progressDialog;
+    private boolean flag; //True -> goes to next screen, False -> Details Screen
 
     private FirebaseAuth firebaseAuth;
 
@@ -36,8 +44,8 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_patient_login);
         mToolbar = (Toolbar)findViewById(R.id.appTb);
         setSupportActionBar(mToolbar);
+        flag = false;
         firebaseAuth = FirebaseAuth.getInstance();
-
         if(firebaseAuth.getCurrentUser() != null){
 
             //profile activity here
@@ -93,8 +101,31 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
 
                         if(task.isSuccessful()){
                            //start the profile activity
-                            finish();
-                            startActivity(new Intent(getApplicationContext(),PatientDetails.class));
+                            //finish();
+                            FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
+                            String userId = currUser.getUid();
+                            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference reference = database.getReference("Users");
+                            Query query = reference.orderByChild("id").equalTo(userId).limitToFirst(1);
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                                        flag = true;
+                                    }
+                                    if(flag){
+                                        Intent intent = new Intent(getApplicationContext(), PatientProfileActivity.class);
+                                        startActivity(intent);
+                                    } else{
+                                        startActivity(new Intent(getApplicationContext(),PatientDetails.class));
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    flag = false;
+                                }
+                            });
                         }
                     }
                 });

@@ -60,7 +60,7 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
             case R.id.nav_consult: Intent intent3 = new Intent(this, ConsultDoctorActivity.class); startActivity(intent3); break;
             case R.id.nav_facilities: Intent intent4 = new Intent(this, FacilitiesNearMeActivity.class); startActivity(intent4); break;
             case R.id.nav_feedback: Intent intent5 = new Intent(this, DoctorFeedbackActivity.class); startActivity(intent5); break;
-            case R.id.nav_logout: Intent closingIntent = new Intent(getApplicationContext(), LoginActivity.class); closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); startActivity(closingIntent); break;
+            case R.id.nav_logout: Intent closingIntent = new Intent(getApplicationContext(), LaunchScreen.class); closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); startActivity(closingIntent); break;
         }
         DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout_patient);
         layout.closeDrawer(GravityCompat.START);

@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:screenOrientation="portrait">
         <activity android:name=".userprofile.LaunchScreen" android:theme="@style/StandardTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,12 +30,13 @@
         <activity
             android:name=".userprofile.PatientLogin"
             android:parentActivityName=".userprofile.ChoiceRegister" />
-        <activity android:name=".userprofile.PatientDetails"></activity>
+        <activity android:name=".userprofile.PatientDetails"/>
         <activity android:name=".userprofile.DoctorProfileActivity" android:theme="@style/StandardTheme" />
         <activity android:name=".medicalcondition.ViewMedicalConditionActivity" />
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
-        <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
+        <activity android:name=".doctorfeedback.DoctorFeedbackActivity"/>
+        <activity android:name=".userprofile.PatientProfileActivity" />
     </application>
 
 </manifest>
