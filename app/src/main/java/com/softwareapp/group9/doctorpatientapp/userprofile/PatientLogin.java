@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +24,7 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
     private Button patientLoginButton;
     private EditText patientLoginEmail;
     private EditText patientLoginPassword;
-
+    private Toolbar mToolbar;
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
@@ -33,7 +34,8 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_login);
-
+        mToolbar = (Toolbar)findViewById(R.id.appTb);
+        setSupportActionBar(mToolbar);
         firebaseAuth = FirebaseAuth.getInstance();
 
         if(firebaseAuth.getCurrentUser() != null){

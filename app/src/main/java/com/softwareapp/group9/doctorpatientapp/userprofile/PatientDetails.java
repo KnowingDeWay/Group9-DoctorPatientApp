@@ -38,7 +38,7 @@ public class PatientDetails extends AppCompatActivity implements View.OnClickLis
             startActivity(new Intent(this, PatientLogin.class));
         }
 
-        databaseReference= FirebaseDatabase.getInstance().getReference();
+        databaseReference= FirebaseDatabase.getInstance().getReference("Users");
 
         regSurname = (EditText) findViewById(R.id.regSurname);
         regOtherName = (EditText) findViewById(R.id.regOtherName);
@@ -69,7 +69,7 @@ public class PatientDetails extends AppCompatActivity implements View.OnClickLis
         PatientInformation patientInformation = new PatientInformation(surname,otherName,gender,age,height,weight,address);
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
-
+        patientInformation.id = user.getUid();
         databaseReference.child(user.getUid()).setValue(patientInformation);
 
         Toast.makeText(this, "Patient details saved...", Toast.LENGTH_LONG).show();

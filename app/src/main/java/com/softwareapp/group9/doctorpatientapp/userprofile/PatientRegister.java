@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -26,12 +27,14 @@ public class PatientRegister extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.patient_register);
-
+        mToolbar = (Toolbar) findViewById(R.id.appTb);
+        setSupportActionBar(mToolbar);
         firebaseAuth = FirebaseAuth.getInstance();
 
         getSupportActionBar().setTitle("Patient Register");
