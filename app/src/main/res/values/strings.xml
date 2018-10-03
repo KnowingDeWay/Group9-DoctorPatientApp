@@ -7,6 +7,14 @@
     <string name="menu_item_4_patient">Facilities near me</string>
     <string name="menu_item_5_patient">Doctor\'s Feedback</string>
     <string name="menu_item_6_patient">Log out</string>
+    <string name="profile_surname_text">Surname:</string>
+    <string name="profile_othername_text">Name:</string>
+    <string name="profile_gender_text">Gender:</string>
+    <string name="profile_age_text">Age:</string>
+    <string name="profile_height_text">Height:</string>
+    <string name="profile_weight_text">Weight:</string>
+    <string name="profile_address_text">Address:</string>
+    <string name="profile_submit_button_text">Update Profile</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.softwareapp.group9.doctorpatientapp.userprofile;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,10 +10,19 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.consultdoctor.ConsultDoctorActivity;
@@ -28,6 +38,16 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
     private NavigationView navigationView;
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private FirebaseDatabase database;
+    private EditText profileSurnameEt;
+    private EditText profileOtherNameEt;
+    private EditText profileGenderEt;
+    private EditText profileAgeEt;
+    private EditText profileHeightEt;
+    private EditText profileWeightEt;
+    private EditText profileAddressEt;
+    private String userId;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +68,56 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
             finish();
             startActivity(new Intent(this, PatientLogin.class));
         }
+        userId = user.getUid();
+        profileSurnameEt = (EditText)findViewById(R.id.profileSurnameEt);
+        profileOtherNameEt = (EditText) findViewById(R.id.profileOtherNameEt);
+        profileGenderEt = (EditText) findViewById(R.id.profileGenderEt);
+        profileAgeEt = (EditText) findViewById(R.id.profileAgeEt);
+        profileHeightEt = (EditText) findViewById(R.id.profileHeightEt);
+        profileWeightEt = (EditText) findViewById(R.id.profileWeightEt);
+        profileAddressEt = (EditText) findViewById(R.id.profileAddressEt);
+        database = FirebaseDatabase.getInstance();
+        retreiveUserDetails();
         setTitle("Patient Profile");
+    }
+
+    public void updateUserProfile(View view){
+        String surname = profileSurnameEt.getText().toString().trim();
+        String otherName = profileOtherNameEt.getText().toString().trim();
+        String gender = profileGenderEt.getText().toString().trim();
+        String age = profileAgeEt.getText().toString().trim();
+        String height = profileHeightEt.getText().toString().trim();
+        String weight = profileWeightEt.getText().toString().trim();
+        String address = profileAddressEt.getText().toString().trim();
+    }
+
+    public void retreiveUserDetails(){
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading User Profile...");
+        progressDialog.show();
+        DatabaseReference reference = database.getReference("Users");
+        Query query = reference.orderByKey().equalTo(userId).limitToFirst(1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    PatientInformation information = snapshot.getValue(PatientInformation.class);
+                    profileSurnameEt.setText(information.surname);
+                    profileOtherNameEt.setText(information.otherName);
+                    profileGenderEt.setText(information.gender);
+                    profileAgeEt.setText(information.age);
+                    profileHeightEt.setText(information.height);
+                    profileWeightEt.setText(information.weight);
+                    profileAddressEt.setText(information.address);
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
