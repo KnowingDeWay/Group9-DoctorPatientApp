@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +50,11 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*
+                make sure all permissions have been verified before opening the dialog
+                 */
+
                 ChangePhotoDialog dialog = new ChangePhotoDialog();
                 dialog.show(getFragmentManager(), getString(R.string.change_photo_dialog));
 //                Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
