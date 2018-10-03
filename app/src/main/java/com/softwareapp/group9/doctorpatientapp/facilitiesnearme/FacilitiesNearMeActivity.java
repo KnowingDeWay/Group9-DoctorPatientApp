@@ -126,9 +126,9 @@ public class FacilitiesNearMeActivity extends AppCompatActivity implements Navig
         return true;
     }
 
-    public void setPadding(View view){
-        mMap.setPadding(0,300,0,0);
-    }
+    //public void setPadding(View view){
+       // mMap.setPadding(0,300,0,0);
+    //}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
