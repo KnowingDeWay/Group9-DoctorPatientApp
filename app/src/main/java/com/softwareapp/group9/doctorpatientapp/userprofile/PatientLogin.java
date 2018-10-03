@@ -1,7 +1,9 @@
 package com.softwareapp.group9.doctorpatientapp.userprofile;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -78,14 +80,16 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
 
         if(TextUtils.isEmpty(email)){
             //email is empty
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            showDialog("Error", "Please enter email!");
             //stopping function from executing further
             return;
         }
 
         if(TextUtils.isEmpty(password)){
             //password is empty
-            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            showDialog("Error", "Please enter password!");
             //stopping function from executing further
             return;
         }
@@ -97,7 +101,6 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
 
                         if(task.isSuccessful()){
                            //start the profile activity
@@ -119,13 +122,22 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
                                     } else{
                                         startActivity(new Intent(getApplicationContext(),PatientDetails.class));
                                     }
+                                    progressDialog.dismiss();
                                 }
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
                                     flag = false;
+                                    showDialog("Error", "There was an error connecting to the database! Please try again later");
                                 }
                             });
+                        } else {
+                            if(!isConnected()){
+                                showDialog("Error", "Unable to login! You are not connected!");
+                            } else {
+                                showDialog("Error", "Unable to login! Please check your credentials and try again");
+                            }
+                            progressDialog.dismiss();
                         }
                     }
                 });
@@ -140,5 +152,17 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
         }
 
 
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void showDialog(String title, String message){
+        CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
     }
 }

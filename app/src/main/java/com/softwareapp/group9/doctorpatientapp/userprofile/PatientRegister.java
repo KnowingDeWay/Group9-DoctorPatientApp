@@ -1,6 +1,8 @@
 package com.softwareapp.group9.doctorpatientapp.userprofile;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -89,7 +91,10 @@ public class PatientRegister extends AppCompatActivity implements View.OnClickLi
 
                             else{
                                 //Toast.makeText(PatientRegister.this, "Could not register", Toast.LENGTH_SHORT). show();
-                                showDialog("Error", "Registration Failed! The account may already exist");
+                                if(!isConnected()){
+                                    showDialog("Error", "Please check Internet Connection!");
+                                }
+                                showDialog("Error", "Registration Failed! The account may already exist.");
                             }
                         }
 
@@ -105,6 +110,11 @@ public class PatientRegister extends AppCompatActivity implements View.OnClickLi
         }
 
 
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     public void showDialog(String title, String message){
