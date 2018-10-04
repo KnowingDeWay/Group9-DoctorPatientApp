@@ -2,12 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.softwareapp.group9.doctorpatientapp">
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,7 +23,6 @@
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
         <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
-        <activity android:name=".consultdoctor.UploadActivity"></activity>
     </application>
 
 </manifest>
