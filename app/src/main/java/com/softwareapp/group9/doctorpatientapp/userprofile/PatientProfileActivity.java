@@ -1,7 +1,9 @@
 package com.softwareapp.group9.doctorpatientapp.userprofile;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -82,13 +85,55 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
     }
 
     public void updateUserProfile(View view){
-        String surname = profileSurnameEt.getText().toString().trim();
-        String otherName = profileOtherNameEt.getText().toString().trim();
-        String gender = profileGenderEt.getText().toString().trim();
-        String age = profileAgeEt.getText().toString().trim();
-        String height = profileHeightEt.getText().toString().trim();
-        String weight = profileWeightEt.getText().toString().trim();
-        String address = profileAddressEt.getText().toString().trim();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Updating User Profile...");
+        progressDialog.show();
+        final DatabaseReference reference = database.getReference("Users");
+        final String surname = profileSurnameEt.getText().toString().trim();
+        final String otherName = profileOtherNameEt.getText().toString().trim();
+        final String gender = profileGenderEt.getText().toString().trim();
+        final String age = profileAgeEt.getText().toString().trim();
+        final String height = profileHeightEt.getText().toString().trim();
+        final String weight = profileWeightEt.getText().toString().trim();
+        final String address = profileAddressEt.getText().toString().trim();
+        if(isConnected()){
+            Query query = reference.orderByKey().equalTo(userId).limitToFirst(1);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    PatientInformation currentInformation = null;
+                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                        currentInformation = snapshot.getValue(PatientInformation.class);
+                    }
+                    PatientInformation information = new PatientInformation(userId, surname, otherName, gender, age, height, weight, address);
+                    if(currentInformation != null){
+                        if(currentInformation.equals(information)){
+                            progressDialog.dismiss();
+                            showDialog("Error", "No change was made to data!");
+                        } else {
+                            reference.child(userId).setValue(information);
+                            progressDialog.dismiss();
+                            showDialog("Notice", "Profile Updated!");
+                        }
+                    } else {
+                        progressDialog.dismiss();
+                        showDialog("Error", "Unknown error has occurred!");
+                        Intent intent = new Intent(getApplicationContext(), PatientLogin.class);
+                        finish();
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    progressDialog.dismiss();
+                    showDialog("Error", "Unable to connect to the database!");
+                }
+            });
+        } else {
+            progressDialog.dismiss();
+            showDialog("Error", "Unable to connect to the internet!");
+        }
     }
 
     public void retreiveUserDetails(){
@@ -115,9 +160,29 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressDialog.dismiss();
+                showDialog("Error", "Unable to connect to database!");
             }
         });
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void showDialog(String title, String message){
+        CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
+    }
+
+    public void showBackDialog(String title, String message){
+        BackDialogActivity dialog = new BackDialogActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
     }
 
     @Override
