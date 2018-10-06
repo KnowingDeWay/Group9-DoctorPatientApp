@@ -80,6 +80,7 @@ public class PatientDetails extends AppCompatActivity implements View.OnClickLis
 
             //Toast.makeText(this, "Patient details saved...", Toast.LENGTH_LONG).show();
             showContinueDialog("Notice", "Patient Details Saved!");
+            finish();
         }
     }
 

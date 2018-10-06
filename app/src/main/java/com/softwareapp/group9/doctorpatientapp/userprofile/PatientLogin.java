@@ -108,7 +108,7 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
                             FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
                             String userId = currUser.getUid();
                             final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference reference = database.getReference("Users");
+                            DatabaseReference reference = database.getReference("Users/Patients");
                             Query query = reference.orderByChild("id").equalTo(userId).limitToFirst(1);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

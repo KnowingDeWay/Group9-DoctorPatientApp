@@ -88,7 +88,7 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Updating User Profile...");
         progressDialog.show();
-        final DatabaseReference reference = database.getReference("Users");
+        final DatabaseReference reference = database.getReference("Users/Patients");
         final String surname = profileSurnameEt.getText().toString().trim();
         final String otherName = profileOtherNameEt.getText().toString().trim();
         final String gender = profileGenderEt.getText().toString().trim();
@@ -117,6 +117,9 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
                         }
                     } else {
                         progressDialog.dismiss();
+                        if(user != null){
+                            auth.signOut();
+                        }
                         showDialog("Error", "Unknown error has occurred!");
                         Intent intent = new Intent(getApplicationContext(), PatientLogin.class);
                         finish();
@@ -140,7 +143,7 @@ public class PatientProfileActivity extends AppCompatActivity implements Navigat
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading User Profile...");
         progressDialog.show();
-        DatabaseReference reference = database.getReference("Users");
+        DatabaseReference reference = database.getReference("Users/Patients");
         Query query = reference.orderByKey().equalTo(userId).limitToFirst(1);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
