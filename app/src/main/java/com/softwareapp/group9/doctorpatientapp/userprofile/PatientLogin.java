@@ -36,6 +36,8 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
     private Toolbar mToolbar;
     private ProgressDialog progressDialog;
     private boolean flag; //True -> goes to next screen, False -> Details Screen
+    private FirebaseAuth auth;
+    private FirebaseUser currUser;
 
     private FirebaseAuth firebaseAuth;
 
@@ -53,13 +55,14 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
             //profile activity here
             //Simplified coding, part 2, around 11 minutes
             finish();
-            startActivity(new Intent(getApplicationContext(),PatientDetails.class));
+            startActivity(new Intent(getApplicationContext(),PatientProfileActivity.class));
         }
 
         patientLoginEmail = (EditText) findViewById(R.id.patientLoginEmail);
         patientLoginPassword = (EditText) findViewById(R.id.patientLoginPassword);
         patientLoginButton = (Button) findViewById(R.id.patientLoginButton);
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        currUser = firebaseAuth.getCurrentUser();
         patientLoginButton.setOnClickListener(this);
 
 
