@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,12 +31,22 @@ public class ViewMedicalConditionAdapter extends RecyclerView.Adapter<ViewMedica
     private Context context;
     private ArrayList<MedicalCondition> list;
     private FirebaseDatabase database;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String userId;
+    private DatabaseReference reference;
+    private String referenceString;
     private SecureEncrypter encryptionManager;
 
     public ViewMedicalConditionAdapter(Context context, ArrayList<MedicalCondition> list){
         this.context = context;
         this.list = list;
         database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        userId = user.getUid();
+        referenceString = "Users/Patients/" + userId;
+        reference = database.getReference(referenceString);
         encryptionManager = SecureEncrypter.getInstance();
     }
 
@@ -75,7 +87,6 @@ public class ViewMedicalConditionAdapter extends RecyclerView.Adapter<ViewMedica
                 public void onClick(View v) {
                     MedicalCondition condition = list.get(getAdapterPosition());
                     String encryptedId = encryptionManager.encryptData(condition.getConditionId());
-                    DatabaseReference reference = database.getReference();
                     Query query = reference.child("MedicalConditions").orderByChild("conditionId").equalTo(encryptedId);
                     query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

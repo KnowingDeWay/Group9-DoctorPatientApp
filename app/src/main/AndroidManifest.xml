@@ -9,16 +9,42 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity" android:theme="@style/StandardTheme">
+        <activity
+            android:name=".userprofile.LaunchScreen"
+            android:screenOrientation="portrait"
+            android:theme="@style/StandardTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--
         <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
         <activity android:name=".userprofile.PatientProfileActivity"/>
-        <activity android:name=".userprofile.DoctorProfileActivity" android:theme="@style/StandardTheme" />
+        -->
+        <activity
+            android:name=".userprofile.ChoiceRegister"
+            android:parentActivityName=".userprofile.LaunchScreen"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".userprofile.PatientRegister"
+            android:parentActivityName=".userprofile.ChoiceRegister"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".userprofile.PatientLogin"
+            android:parentActivityName=".userprofile.ChoiceRegister"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".userprofile.PatientDetails"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".userprofile.DoctorProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/StandardTheme" />
+        <activity android:name=".DoctorRegister"
+            android:parentActivityName=".userprofile.ChoiceRegister" android:screenOrientation="portrait"/>
+        <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
+        <activity android:name=".userprofile.PatientProfileActivity"/>
         <activity android:name=".medicalcondition.ViewMedicalConditionActivity" android:screenOrientation="portrait" />
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />

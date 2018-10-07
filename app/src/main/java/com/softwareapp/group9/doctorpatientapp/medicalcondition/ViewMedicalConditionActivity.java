@@ -19,6 +19,7 @@ import android.view.View;
 
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +31,7 @@ import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.consultdoctor.ConsultDoctorActivity;
 import com.softwareapp.group9.doctorpatientapp.doctorfeedback.DoctorFeedbackActivity;
 import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.FacilitiesNearMeActivity;
+import com.softwareapp.group9.doctorpatientapp.userprofile.LaunchScreen;
 import com.softwareapp.group9.doctorpatientapp.userprofile.PatientProfileActivity;
 
 import java.util.ArrayList;
@@ -46,6 +48,10 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
     private FirebaseDatabase database;
     private FirebaseAuth auth;
     private FirebaseOptions options;
+    private DatabaseReference reference;
+    private FirebaseUser user;
+    private String userId;
+    private String referenceString;
     private SecureEncrypter encryptionManager;
 
     @Override
@@ -61,6 +67,16 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         list = new ArrayList<>();
         database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        if(user == null){
+            Intent intent = new Intent(getApplicationContext(), LaunchScreen.class);
+            startActivity(intent);
+            showDialogBox("Error", "You are not logged in!");
+        }
+        userId = user.getUid();
+        referenceString = "Users/Patients/" + userId + "/MedicalConditions";
+        reference = database.getReference(referenceString);
         recyclerView = (RecyclerView) findViewById(R.id.conditionRv);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -82,7 +98,6 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
     public void readDatabase(){
         if(isConnected()){
             try{
-                DatabaseReference reference  = database.getReference("MedicalConditions");
                 AsyncTask<ViewMedicalConditionActivity, Void, ArrayList<MedicalCondition>> task = new Downloader(ViewMedicalConditionActivity.this, database, reference);
                 task.execute(ViewMedicalConditionActivity.this);
             } catch(Exception e){
@@ -117,7 +132,12 @@ public class ViewMedicalConditionActivity extends AppCompatActivity implements N
             case R.id.nav_consult: Intent intent3 = new Intent(this, ConsultDoctorActivity.class); startActivity(intent3); break;
             case R.id.nav_facilities: Intent intent4 = new Intent(this, FacilitiesNearMeActivity.class); startActivity(intent4); break;
             case R.id.nav_feedback: Intent intent5 = new Intent(this, DoctorFeedbackActivity.class); startActivity(intent5); break;
-            case R.id.nav_logout: Intent closingIntent = new Intent(getApplicationContext(), LoginActivity.class); closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); startActivity(closingIntent); break;
+            case R.id.nav_logout:
+                Intent closingIntent = new Intent(getApplicationContext(), LaunchScreen.class);
+                closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                auth.signOut();
+                startActivity(closingIntent);
+                break;
         }
         DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout_patient);
         layout.closeDrawer(GravityCompat.START);

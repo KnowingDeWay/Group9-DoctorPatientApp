@@ -1,6 +1,7 @@
 package com.softwareapp.group9.doctorpatientapp.medicalcondition;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.softwareapp.group9.doctorpatientapp.FirebaseSecurity.SecureEncrypter;
 import com.softwareapp.group9.doctorpatientapp.R;
+import com.softwareapp.group9.doctorpatientapp.userprofile.LaunchScreen;
 
 import java.util.ArrayList;
 
@@ -22,6 +26,10 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
     private EditText addConidtionDescEt;
     private FirebaseDatabase database;
     private DatabaseReference reference;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String userId;
+    private String referenceString;
     private SecureEncrypter encrypter;
 
     @Override
@@ -32,7 +40,16 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
         addConidtionDescEt = (EditText) findViewById(R.id.addConditionDescEt);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         database = FirebaseDatabase.getInstance();
-        reference = database.getReference("MedicalConditions");
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        if(user == null){
+            Intent intent = new Intent(getApplicationContext(), LaunchScreen.class);
+            startActivity(intent);
+            showDialogBox("Error", "You are not logged in!");
+        }
+        userId = user.getUid();
+        referenceString = "Users/Patients/" + userId + "/MedicalConditions";
+        reference = database.getReference(referenceString);
         encrypter = SecureEncrypter.getInstance();
         setTitle("Add Medical Condition");
     }
@@ -77,7 +94,7 @@ public class AddMedicalConditionActivity extends AppCompatActivity {
                     showRetryDialogBox("Unable to add medical condition!", "Error");
                 }
             } else {
-                showRetryDialogBox("No Internet COnnection Detected!", "Error");
+                showRetryDialogBox("No Internet Connection Detected!", "Error");
             }
         }
     }
