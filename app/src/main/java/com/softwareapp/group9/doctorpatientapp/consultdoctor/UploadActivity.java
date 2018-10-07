@@ -178,7 +178,7 @@ public class UploadActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //Get a URL to the uploaded content
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         toastMessage("Upload Success");
                         mProgressDialog.dismiss();
                     }
