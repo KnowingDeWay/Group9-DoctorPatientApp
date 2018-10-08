@@ -51,7 +51,7 @@ public class UploadActivity extends AppCompatActivity {
     private int array_position;
 
     private StorageReference mStorageRef;
-//    private FirebaseAuth auth;
+    private FirebaseAuth auth;
 
 
 
@@ -71,7 +71,7 @@ public class UploadActivity extends AppCompatActivity {
         imageName = (EditText) findViewById(R.id.imageName);
         pathArray = new ArrayList<>();
         mProgressDialog = new ProgressDialog(UploadActivity.this);
-//        auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -129,35 +129,35 @@ public class UploadActivity extends AppCompatActivity {
                 }).start();
 
                 //get the signed in user
-//                FirebaseUser user = auth.getCurrentUser();
-//                String userID = user.getUid();
-//
-//                String name = imageName.getText().toString();
-//                if (!name.equals("")){
-//                    Uri uri = Uri.fromFile(new File(pathArray.get(array_position)));
-//                    StorageReference storageReference = mStorageRef.child("images/users/" + userID + "/" + name + ".jpg");
-//                    storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            //Get a URL to the uploaded content
-//                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//                            toastMessage("Upload Success");
-//                            mProgressDialog.dismiss();
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            toastMessage("Upload Failed");
-//                            mProgressDialog.dismiss();
-//                        }
-//                    })
-//                    ;
-//                }
-
-
-
+                FirebaseUser user = auth.getCurrentUser();
+                String userID = user.getUid();
 
                 String name = imageName.getText().toString();
+                if (!name.equals("")){
+                    Uri uri = Uri.fromFile(new File(pathArray.get(array_position)));
+                    StorageReference storageReference = mStorageRef.child("images/users/" + userID + "/" + name + ".jpg");
+                    storageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //Get a URL to the uploaded content
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            toastMessage("Upload Success");
+                            mProgressDialog.dismiss();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            toastMessage("Upload Failed");
+                            mProgressDialog.dismiss();
+                        }
+                    })
+                    ;
+                }
+
+
+
+
+//                String name = imageName.getText().toString();
 
 
 

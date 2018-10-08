@@ -83,6 +83,7 @@
           }
         },
         {
+<<<<<<< HEAD
           "client_id": "1076171878629-b0q2cp95bru95ie5df54uce6nqudi402.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -91,14 +92,8 @@
           }
         },
         {
-          "client_id": "1076171878629-suhqgr92ftnt26fc7eafh5p6cpk4u5tq.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.softwareapp.group9.doctorpatientapp",
-            "certificate_hash": "d79764f5ec9bcb333187efdaef0a477dc00aefa6"
-          }
-        },
-        {
+=======
+>>>>>>> Login
           "client_id": "1076171878629-hoj7igvgjdknoll9pgbg678nv3tmemk4.apps.googleusercontent.com",
           "client_type": 3
         }
