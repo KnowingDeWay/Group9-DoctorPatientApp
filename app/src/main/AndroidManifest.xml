@@ -29,28 +29,45 @@
         <activity
             android:name=".userprofile.ChoiceRegister"
             android:parentActivityName=".userprofile.LaunchScreen"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".userprofile.PatientRegister"
             android:parentActivityName=".userprofile.ChoiceRegister"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".userprofile.PatientLogin"
             android:parentActivityName=".userprofile.ChoiceRegister"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".userprofile.PatientDetails"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".userprofile.PatientDetails"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".userprofile.DoctorProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/StandardTheme" />
-        <activity android:name=".medicalcondition.ViewMedicalConditionActivity" android:screenOrientation="portrait" />
-        <activity android:name=".consultdoctor.ConsultDoctorActivity" android:screenOrientation="portrait" />
-        <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" android:screenOrientation="portrait" />
-        <activity android:name=".doctorfeedback.DoctorFeedbackActivity" android:screenOrientation="portrait" />
-        <activity android:name=".userprofile.PatientProfileActivity" android:screenOrientation="portrait" />
-        <activity android:name=".DoctorRegister"
-            android:parentActivityName=".userprofile.ChoiceRegister" android:screenOrientation="portrait"/>
-    </application>
+        <activity
+            android:name=".medicalcondition.ViewMedicalConditionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".consultdoctor.ConsultDoctorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".facilitiesnearme.FacilitiesNearMeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".doctorfeedback.DoctorFeedbackActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".userprofile.PatientProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DoctorRegister"
+            android:parentActivityName=".userprofile.ChoiceRegister"
+            android:screenOrientation="portrait" />
+        <!-- <activity android:name=".DoctorInformation" /> -->>
+      <activity android:name=".DoctorDetails" />
+      <activity android:name=".DoctorLogin" />
+        <!-- <activity android:name=".DoctorProfile"></activity> -->>
+ </application>
 
 </manifest>
