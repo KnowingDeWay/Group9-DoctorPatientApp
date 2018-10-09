@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.softwareapp.group9.doctorpatientapp">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,18 +12,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity" android:theme="@style/StandardTheme">
+        <activity android:name=".userprofile.LaunchScreen" android:theme="@style/StandardTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".userprofile.ChoiceRegister"
+            android:parentActivityName=".userprofile.LaunchScreen"/>
+        <activity android:name=".userprofile.PatientRegister"
+            android:parentActivityName=".userprofile.ChoiceRegister"/>
+        <activity android:name=".userprofile.PatientLogin"
+            android:parentActivityName=".userprofile.ChoiceRegister"/>
+        <activity android:name=".userprofile.PatientDetails"/>
         <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
         <activity android:name=".userprofile.PatientProfileActivity"/>
         <activity android:name=".userprofile.DoctorProfileActivity" android:theme="@style/StandardTheme" />
         <activity android:name=".medicalcondition.ViewMedicalConditionActivity" />
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
+        <activity android:name=".consultdoctor.UploadActivity"></activity>
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
         <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
     </application>

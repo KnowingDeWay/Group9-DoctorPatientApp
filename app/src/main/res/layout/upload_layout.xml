@@ -13,29 +13,14 @@
         android:layout_marginTop="13dp"
         android:id="@+id/btnUploadImage"
         />
-    <RelativeLayout
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btnUploadImage"
-        android:layout_centerHorizontal="true">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            android:layout_marginLeft="5dp"
-            android:text="Back"
-            android:id="@+id/btnBackImage"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next"
-            android:layout_marginTop="13dp"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/btnNextImage"
-            android:layout_toRightOf="@+id/btnBackImage"/>
-
-    </RelativeLayout>
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="40dp"
+        android:text="Choose"
+        android:id="@+id/btnChooseImage"/>
 
     <ImageView
         android:layout_width="250dp"

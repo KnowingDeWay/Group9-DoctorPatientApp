@@ -1,5 +1,6 @@
 package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 
+import android.app.ProgressDialog;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,13 +17,21 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,12 +54,23 @@ import com.softwareapp.group9.doctorpatientapp.userprofile.PatientProfileActivit
 import java.io.ByteArrayOutputStream;
 import android.app.ProgressDialog;
 
-public class ConsultDoctorActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ConsultDoctorActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ChangePhotoDialog.OnPhotoReceivedListener, UploadActivity.OnPhotoReceivedListener {
 
+    private static final String TAG = ConsultDoctorActivity.class.getSimpleName();
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private Toolbar mToolbar;
     private NavigationView navigationView;
+    private ImageView imageViewPatient;
+    private String mSelectedImagePath;
+    private Button btnConsultDoctor;
+
+    private StorageReference mStorageRef;
+    private FirebaseAuth auth;
+
+    private Byte filePath;
+
+
 
     private Button selectFile;
     private Button uploadImage;
@@ -61,7 +81,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
     FirebaseStorage storage;
     FirebaseDatabase database;
     ProgressDialog progressDialog;
-    private FirebaseAuth auth;
+
     private FirebaseUser user;
     private String userId;
     private String reference;
@@ -86,9 +106,10 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
             reference = "users/" + userId + "/files";
         }
         setTitle("Consult Doctor");
-
-
+        imageViewPatient = (ImageView) findViewById(R.id.imageViewPatient);
+        btnConsultDoctor = (Button) findViewById(R.id.btnConsultDoctor);
         final Button uploadImage = (Button) findViewById(R.id.button4);
+
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,7 +140,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         final ProgressDialog progressDialog;
 
         selectFile1 = findViewById(R.id.selectfile1);
-        upload = findViewById(R.id.upload);
+        upload = findViewById(R.id.selectfile1);
         notification = findViewById(R.id.notification);
 
         selectFile1.setOnClickListener(new View.OnClickListener() {
@@ -228,18 +249,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
     }
 
-    /**
-     * Compress a bitmap by the @param "quality"
-     * Quality can be anywhere from 1 -100 : 100 being the highest quality.
-     * @param bitmap
-     * @param quality
-     * @return
-     */
-    public Bitmap compressBitmap(Bitmap bitmap, int quality){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
-        return bitmap;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
@@ -265,6 +275,40 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout_patient);
         layout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    /**
+     * Compress a bitmap by the @param "quality"
+     * Quality can be anywhere from 1 -100 : 100 being the highest quality.
+     * @param bitmap
+     * @param quality
+     * @return
+     */
+    public Bitmap compressBitmap(Bitmap bitmap, int quality){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+        return bitmap;
+    }
+
+    //ChangePhotoDialog
+    @Override
+    public void getBitmapImage(Bitmap bitmap) {
+        //get the bitmap from changephotodialog
+        if (bitmap != null){
+            //compress the image if you like
+
+            compressBitmap(bitmap,70);
+            imageViewPatient.setImageBitmap(bitmap);
+        }
+    }
+
+    //uploadActivity
+    @Override
+    public void getImagePath(Bitmap imagePath) {
+
+           imageViewPatient.setImageBitmap(imagePath);
+
     }
 
 

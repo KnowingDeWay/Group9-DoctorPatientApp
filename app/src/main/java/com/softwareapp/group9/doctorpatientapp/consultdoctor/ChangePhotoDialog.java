@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +27,7 @@ public class ChangePhotoDialog extends DialogFragment {
 
     public interface OnPhotoReceivedListener{
         public void getBitmapImage(Bitmap bitmap);
-        public void getImagePath(String imagePath);
+
     }
 
     OnPhotoReceivedListener mOnPhotoReceived;
@@ -49,6 +51,7 @@ public class ChangePhotoDialog extends DialogFragment {
         //initalize the textview for choosing an image from memory
         TextView selectPhoto = (TextView) view.findViewById(R.id.dialogChoosePhoto);
         selectPhoto.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"onClick: accessing phones memory.");
@@ -79,7 +82,7 @@ public class ChangePhotoDialog extends DialogFragment {
         super.onAttach(context);
         try {
 
-            mOnPhotoReceived = (OnPhotoReceivedListener) getTargetFragment();
+            mOnPhotoReceived = (OnPhotoReceivedListener) getActivity();
         }catch (ClassCastException e){
             Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
         }
@@ -104,17 +107,17 @@ public class ChangePhotoDialog extends DialogFragment {
             getDialog().dismiss();
         }
 
-        /**
-         * results when selecting new image from phone memory
-         */
-        if (requestCode == Init.PICFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK){
-            Uri selectedImageUri = data.getData();
-            File file = new File(selectedImageUri.toString());
-            Log.d(TAG, "onActivityResult: images: " + file.getPath());
-
-            //send the bitmap and fragment to the interface
-            mOnPhotoReceived.getImagePath(file.getPath());
-            getDialog().dismiss();
-        }
+//        /**
+//         * results when selecting new image from phone memory
+//         */
+//        if (requestCode == Init.PICFILE_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+//            Uri selectedImageUri = data.getData();
+//            File file = new File(selectedImageUri.toString());
+//            Log.d(TAG, "onActivityResult: images: " + file.getPath());
+//
+//            //send the bitmap and fragment to the interface
+//            mOnPhotoReceived.getImagePath(file.getPath());
+//            getDialog().dismiss();
+//        }
     }
 }
