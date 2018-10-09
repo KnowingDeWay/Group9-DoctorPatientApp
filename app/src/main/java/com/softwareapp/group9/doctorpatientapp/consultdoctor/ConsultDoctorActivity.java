@@ -81,8 +81,10 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         navigationView.setNavigationItemSelectedListener(this);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-        userId = user.getUid();
-        reference = "users/" + userId + "/files";
+        if(user != null){
+            userId = user.getUid();
+            reference = "users/" + userId + "/files";
+        }
         setTitle("Consult Doctor");
 
 
