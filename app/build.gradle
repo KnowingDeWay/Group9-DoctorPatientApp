@@ -43,5 +43,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.google.firebase:firebase-storage:16.0.1'
     implementation 'com.google.firebase:firebase-auth:16.0.1'
+    implementation files('libs/universal-image-loader-1.9.5.jar') //nostra13 iamge loader jar... goes into lib in project
 }
 //apply plugin: 'com.google.gms.google-services'

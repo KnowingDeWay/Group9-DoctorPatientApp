@@ -27,6 +27,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -59,6 +61,10 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
     FirebaseStorage storage;
     FirebaseDatabase database;
     ProgressDialog progressDialog;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String userId;
+    private String reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,10 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigationView = (NavigationView) findViewById(R.id.patientNv);
         navigationView.setNavigationItemSelectedListener(this);
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        userId = user.getUid();
+        reference = "users/" + userId + "/files";
         setTitle("Consult Doctor");
 
 
@@ -140,8 +150,8 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
 
                 final String fileName=System.currentTimeMillis()+"";
-                StorageReference storageReference=storage.getReference(); //Returns root path
-                storageReference.child("Uploads").child(fileName).putFile(pdfUri)
+                StorageReference storageReference=storage.getReference(reference); //Returns root path
+                storageReference.child(fileName).putFile(pdfUri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
