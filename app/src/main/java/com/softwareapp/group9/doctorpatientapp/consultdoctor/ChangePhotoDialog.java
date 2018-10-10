@@ -55,13 +55,20 @@ public class ChangePhotoDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"onClick: accessing phones memory.");
-
-//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//                intent.setType("image/*");
-//                startActivityForResult(intent, Init.PICFILE_REQUEST_CODE);
                 Intent intent = new Intent(getContext(), UploadActivity.class);
                 startActivity(intent);
+            }
+        });
 
+        //initialize the textview for uploading the video
+        TextView uploadVideo = (TextView) view.findViewById(R.id.dialogUplaodVideo);
+        uploadVideo.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: select or record video");
+                Intent intent = new Intent(getContext(), UploadVideoActivity.class);
+                startActivity(intent);
             }
         });
 
