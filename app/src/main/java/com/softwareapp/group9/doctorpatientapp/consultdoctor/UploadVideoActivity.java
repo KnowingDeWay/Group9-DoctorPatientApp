@@ -123,7 +123,7 @@ public class UploadVideoActivity extends AppCompatActivity {
 
     public void download(){
         try{
-            final File localFile = File.createTempFile("patientRecord", "3gp");
+             final File localFile = File.createTempFile("patientRecord", "3gp");
 
             videoRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override

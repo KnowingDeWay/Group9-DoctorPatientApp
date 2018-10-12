@@ -315,14 +315,14 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
            imageViewPatient.setImageBitmap(imagePath);
 
     }
-
-    ///////////////////
-    public static byte[] getBytesFromBitmap(Bitmap bm, int quality){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, quality, stream);
-        return stream.toByteArray();
-    }
-//////////////////////
+//
+//    ///////////////////
+//    public static byte[] getBytesFromBitmap(Bitmap bm, int quality){
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+//        return stream.toByteArray();
+//    }
+////////////////////////
 
     //  protected void OnCreate(Bundle savedInstanceState){
 
@@ -336,41 +336,41 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 //        startActivity(intent);
 //    }
 
-    public void uplaodImageFromCamera(Bitmap bitmap){
-        //////////////////////////////
-        FirebaseUser user = auth.getCurrentUser();
-        String userID = user.getUid();
-
-
-        if (bitmap != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading");
-            progressDialog.show();
-
-
-            byte[] bytes = getBytesFromBitmap(bitmap, 70);
-            StorageReference ref = mStorageRef.child("users/" + userID.toString() + "/media/image/" + ".jpg");
-            ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
-                    Toast.makeText(ConsultDoctorActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(ConsultDoctorActivity.this, "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    progressDialog.setMessage("Uploaded " + (int) progress + "%");
-                }
-            });
-        }
-        ////////////////////////////////////
-    }
+//    public void uplaodImageFromCamera(Bitmap bitmap){
+//        //////////////////////////////
+//        FirebaseUser user = auth.getCurrentUser();
+//        String userID = user.getUid();
+//
+//
+//        if (bitmap != null) {
+//            final ProgressDialog progressDialog = new ProgressDialog(this);
+//            progressDialog.setTitle("Uploading");
+//            progressDialog.show();
+//
+//
+//            byte[] bytes = getBytesFromBitmap(bitmap, 70);
+//            StorageReference ref = mStorageRef.child("users/" + userID.toString() + "/media/image/" + ".jpg");
+//            ref.putBytes(bytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    progressDialog.dismiss();
+//                    Toast.makeText(ConsultDoctorActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+//                }
+//            })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            progressDialog.dismiss();
+//                            Toast.makeText(ConsultDoctorActivity.this, "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+//                    progressDialog.setMessage("Uploaded " + (int) progress + "%");
+//                }
+//            });
+//        }
+//        ////////////////////////////////////
+//    }
 }

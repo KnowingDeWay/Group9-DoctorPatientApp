@@ -33,6 +33,7 @@
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".consultdoctor.UploadActivity"></activity>
         <activity android:name=".consultdoctor.UploadVideoActivity"></activity>
+        <activity android:name=".consultdoctor.TakeImageFromCameraActivity"></activity>
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
         <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
     </application>
