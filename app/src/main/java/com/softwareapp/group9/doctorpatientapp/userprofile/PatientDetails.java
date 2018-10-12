@@ -40,7 +40,7 @@ public class PatientDetails extends AppCompatActivity implements View.OnClickLis
             startActivity(new Intent(this, PatientLogin.class));
         }
 
-        databaseReference= FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference= FirebaseDatabase.getInstance().getReference("Users/Patients");
 
         regSurname = (EditText) findViewById(R.id.regSurname);
         regOtherName = (EditText) findViewById(R.id.regOtherName);
@@ -80,6 +80,7 @@ public class PatientDetails extends AppCompatActivity implements View.OnClickLis
 
             //Toast.makeText(this, "Patient details saved...", Toast.LENGTH_LONG).show();
             showContinueDialog("Notice", "Patient Details Saved!");
+            //finish();
         }
     }
 

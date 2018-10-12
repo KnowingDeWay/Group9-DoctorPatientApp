@@ -6,12 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.softwareapp.group9.doctorpatientapp.DoctorLogin;
 import com.softwareapp.group9.doctorpatientapp.R;
 
 public class LaunchScreen extends AppCompatActivity {
 
     private Button button3;
     private Button choicePatientButton;
+    private Button choiceDoctorButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,15 @@ public class LaunchScreen extends AppCompatActivity {
             }
 
         });
+
+        choiceDoctorButton= (Button) findViewById(R.id.choiceDoctorButton);
+        choiceDoctorButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                openDoctorLogin();
+            }
+
+        });
     }
 
     public void openChoiceRegister(){
@@ -49,6 +60,12 @@ public class LaunchScreen extends AppCompatActivity {
     public void openPatientLogin(){
 
         Intent intent = new Intent(this, PatientLogin.class);
+        startActivity(intent);
+    }
+
+    public void openDoctorLogin(){
+
+        Intent intent = new Intent(this, DoctorLogin.class);
         startActivity(intent);
     }
 }

@@ -18,6 +18,12 @@ public class PatientInformation  {
 
     }
 
+    public boolean equals(PatientInformation other){
+        return this.id.contentEquals(other.id) && this.surname.contentEquals(other.surname) && this.otherName.contentEquals(other.otherName)
+                && this.gender.contentEquals(other.gender) && this.age.contentEquals(other.age) && this.height.contentEquals(other.height)
+                && this.weight.contentEquals(other.weight) && this.address.contentEquals(other.address);
+    }
+
     public PatientInformation(String id, String surname, String otherName, String gender, String age, String height, String weight, String address) {
         this.id = id;
         this.surname = surname;

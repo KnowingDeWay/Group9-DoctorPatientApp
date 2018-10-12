@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id= "@+id/doctor_nav_profile"
+        android:title="Doctor Profile"
+        android:icon="@mipmap/baseline_person_black_24dp"
+        />
+
+    <!--<item android:id= "@+id/nav_condition"-->
+        <!--android:title="@string/menu_item_2_patient"-->
+        <!--android:icon="@mipmap/baseline_local_hospital_black_24dp"-->
+        <!--/>-->
+
+    <item android:id= "@+id/doctor_nav_view_patient"
+        android:title="View Patients"
+        android:icon="@mipmap/baseline_contact_mail_black_24dp"
+        />
+
+    <!--<item android:id= "@+id/nav_facilities"-->
+        <!--android:title="@string/menu_item_4_patient"-->
+        <!--android:icon="@mipmap/baseline_place_black_24dp"-->
+        <!--/>-->
+
+    <item android:id= "@+id/doctor_nav_Recommendation_History"
+        android:title="Recommendations History"
+        android:icon="@mipmap/baseline_inbox_black_24dp"
+        />
+
+    <item android:id= "@+id/nav_logout"
+        android:title="@string/menu_item_6_patient"
+        android:icon="@mipmap/baseline_exit_to_app_black_24dp"
+        />
+</menu>

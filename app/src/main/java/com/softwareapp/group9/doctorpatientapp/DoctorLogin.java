@@ -1,4 +1,4 @@
-package com.softwareapp.group9.doctorpatientapp.userprofile;
+package com.softwareapp.group9.doctorpatientapp;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,12 +27,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
+import com.softwareapp.group9.doctorpatientapp.userprofile.DoctorProfileActivity;
 
-public class PatientLogin extends AppCompatActivity implements View.OnClickListener {
+public class DoctorLogin extends AppCompatActivity implements View.OnClickListener {
 
-    private Button patientLoginButton;
-    private EditText patientLoginEmail;
-    private EditText patientLoginPassword;
+    private Button doctorLoginButton;
+    private EditText doctorLoginEmail;
+    private EditText doctorLoginPassword;
     private Toolbar mToolbar;
     private ProgressDialog progressDialog;
     private boolean flag; //True -> goes to next screen, False -> Details Screen
@@ -55,31 +57,31 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
             //profile activity here
             //Simplified coding, part 2, around 11 minutes
             finish();
-            startActivity(new Intent(getApplicationContext(),PatientProfileActivity.class));
+            startActivity(new Intent(getApplicationContext(),DoctorProfileActivity.class));
         }
 
-        patientLoginEmail = (EditText) findViewById(R.id.patientLoginEmail);
-        patientLoginPassword = (EditText) findViewById(R.id.patientLoginPassword);
-        patientLoginButton = (Button) findViewById(R.id.patientLoginButton);
+        doctorLoginEmail = (EditText) findViewById(R.id.patientLoginEmail);
+        doctorLoginPassword = (EditText) findViewById(R.id.patientLoginPassword);
+        doctorLoginButton = (Button) findViewById(R.id.patientLoginButton);
         firebaseAuth = FirebaseAuth.getInstance();
         currUser = firebaseAuth.getCurrentUser();
-        patientLoginButton.setOnClickListener(this);
+        doctorLoginButton.setOnClickListener(this);
 
 
 
         progressDialog = new ProgressDialog(this);
 
 
-        getSupportActionBar().setTitle("Patient Login");
+        getSupportActionBar().setTitle("Doctor Login");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
     }
 
-    private void patientLogin(){
+    private void doctorLogin(){
 
-        String email = patientLoginEmail.getText().toString().trim();
-        String password = patientLoginPassword.getText().toString().trim();
+        String email = doctorLoginEmail.getText().toString().trim();
+        String password = doctorLoginPassword.getText().toString().trim();
 
         if(TextUtils.isEmpty(email)){
             //email is empty
@@ -106,12 +108,12 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if(task.isSuccessful()){
-                           //start the profile activity
+                            //start the profile activity
                             //finish();
                             FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
                             String userId = currUser.getUid();
                             final FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference reference = database.getReference("Users/Patients");
+                            DatabaseReference reference = database.getReference("Users/Doctors");
                             Query query = reference.orderByChild("id").equalTo(userId).limitToFirst(1);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -120,10 +122,10 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
                                         flag = true;
                                     }
                                     if(flag){
-                                        Intent intent = new Intent(getApplicationContext(), PatientProfileActivity.class);
+                                        Intent intent = new Intent(getApplicationContext(), DoctorProfileActivity.class);
                                         startActivity(intent);
                                     } else{
-                                        startActivity(new Intent(getApplicationContext(),PatientDetails.class));
+                                        startActivity(new Intent(getApplicationContext(),DoctorDetails.class));
                                     }
                                     progressDialog.dismiss();
                                 }
@@ -149,8 +151,8 @@ public class PatientLogin extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view){
-        if(view == patientLoginButton){
-            patientLogin();
+        if(view == doctorLoginButton){
+            doctorLogin();
 
         }
 
