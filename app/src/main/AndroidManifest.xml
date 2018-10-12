@@ -18,10 +18,12 @@
         </activity>
         <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
         <activity android:name=".userprofile.PatientProfileActivity"/>
-        <activity android:name=".userprofile.DoctorProfileActivity" android:theme="@style/StandardTheme" />
+        <activity android:name=".userprofile.DoctorProfileActivity" /> //android:theme="@style/StandardTheme"
         <activity android:name=".medicalcondition.ViewMedicalConditionActivity" />
         <activity android:name=".consultdoctor.ConsultDoctorActivity" />
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
+        <activity android:name=".doctorviewpatient.DoctorViewPatients" />
+        <activity android:name=".recommendationshistory.RecommendationsHistory" />
         <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
     </application>
 

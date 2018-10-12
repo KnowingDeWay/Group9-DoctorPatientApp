@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.softwareapp.group9.doctorpatientapp.medicalcondition.ViewMedicalConditionActivity;
+import com.softwareapp.group9.doctorpatientapp.userprofile.DoctorProfileActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -19,5 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     public void accessRestOfApp(View view){
         Intent intent = new Intent(this, ViewMedicalConditionActivity.class);
         startActivity(intent);
+//        Intent intent = new Intent(this, DoctorProfileActivity.class);
+//        startActivity(intent);
     }
 }
