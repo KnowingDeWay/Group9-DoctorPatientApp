@@ -91,6 +91,22 @@
           }
         },
         {
+          "client_id": "1076171878629-suhqgr92ftnt26fc7eafh5p6cpk4u5tq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softwareapp.group9.doctorpatientapp",
+            "certificate_hash": "d79764f5ec9bcb333187efdaef0a477dc00aefa6"
+          }
+        },
+        {
+          "client_id": "1076171878629-hj4n645o2vmspflkoni00d30ek7bc43g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.softwareapp.group9.doctorpatientapp",
+            "certificate_hash": "e157c485a2562f4118af1ca73bf71620864d058f"
+          }
+        },
+        {
           "client_id": "1076171878629-hoj7igvgjdknoll9pgbg678nv3tmemk4.apps.googleusercontent.com",
           "client_type": 3
         }
