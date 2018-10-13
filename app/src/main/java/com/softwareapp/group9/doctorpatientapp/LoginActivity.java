@@ -18,9 +18,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void accessRestOfApp(View view){
-        Intent intent = new Intent(this, ViewMedicalConditionActivity.class);
-        startActivity(intent);
-//        Intent intent = new Intent(this, DoctorProfileActivity.class);
+//        Intent intent = new Intent(this, ViewMedicalConditionActivity.class);
 //        startActivity(intent);
+        Intent intent = new Intent(this, DoctorProfileActivity.class);
+        startActivity(intent);
     }
 }

@@ -24,6 +24,7 @@
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" />
         <activity android:name=".doctorviewpatient.DoctorViewPatients" />
         <activity android:name=".recommendationshistory.RecommendationsHistory" />
+        <activity android:name=".doctorviewpatient.ViewPatientDataPacketActivity" />
         <activity android:name=".doctorfeedback.DoctorFeedbackActivity"></activity>
     </application>
 

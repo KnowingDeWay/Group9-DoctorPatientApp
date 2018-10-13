@@ -7,17 +7,35 @@
     android:id="@+id/drawer_layout_doctor"
     tools:context=".doctorviewpatient.DoctorViewPatients">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <include layout="@layout/doctor_nav_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewPatientRecyclerView"
+            >
+
+
+
+        </android.support.v7.widget.RecyclerView>
 
 
     </LinearLayout>
+
+
+
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/doctorNv"

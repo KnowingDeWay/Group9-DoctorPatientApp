@@ -8,19 +8,29 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.doctorviewpatient.DoctorViewPatients;
+import com.softwareapp.group9.doctorpatientapp.doctorviewpatient.RecyclerViewAdapter;
 import com.softwareapp.group9.doctorpatientapp.userprofile.DoctorProfileActivity;
+
+import java.util.ArrayList;
 
 public class RecommendationsHistory extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private Toolbar mToolbar;
     private NavigationView navigationView;
+    //variables
+    private ArrayList<String> mPatientNames = new ArrayList<>();
+    private ArrayList<String> mRecommendations = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,8 @@ public class RecommendationsHistory extends AppCompatActivity implements Navigat
         navigationView = (NavigationView) findViewById(R.id.doctorNv);
         navigationView.setNavigationItemSelectedListener(this);
         setTitle("Recommendations History");
+
+        initTest();
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
@@ -59,5 +71,28 @@ public class RecommendationsHistory extends AppCompatActivity implements Navigat
         DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout_doctor);
         layout.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void initTest(){
+
+        mPatientNames.add("wefsd");
+        mRecommendations.add("Recom1");
+        mPatientNames.add("qawesdxz");
+        mRecommendations.add("Recom2");
+        mPatientNames.add("esvdfgh");
+        mRecommendations.add("Recom3");
+        mPatientNames.add("dvfrtgh");
+        mRecommendations.add("Recom4");
+
+        mPatientNames.add("werthyujy");
+        mRecommendations.add("Recom5");
+        initRecyclerView();
+
+    }
+    private void initRecyclerView(){
+        RecyclerView recyclerView = findViewById(R.id.recommendationHistoryRecyclerView);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mPatientNames, mRecommendations);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:id="@+id/recommendation_parent_layout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:id="@+id/tvRecommendationsHistoryPatientName"
+            android:layout_centerVertical="true"
+            android:textColor="#000"
+            android:layout_marginLeft="30dp"
+            android:textSize="17sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recommendations"
+            android:id="@+id/tvRecommendtions"
+            android:layout_centerVertical="true"
+            android:textColor="#000"
+            android:layout_marginLeft="30dp"
+            android:textSize="17sp"
+            android:layout_toRightOf="@+id/tvRecommendationsHistoryPatientName"
+            />
+    </RelativeLayout>
+
+
+
+</android.support.design.card.MaterialCardView>
+
+
+
+
+
+
+
+
