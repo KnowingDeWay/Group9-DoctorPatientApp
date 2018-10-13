@@ -47,7 +47,7 @@ public class DoctorLogin extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_patient_login);
+        setContentView(R.layout.activity_doctor_login);
         mToolbar = (Toolbar)findViewById(R.id.appTb);
         setSupportActionBar(mToolbar);
         flag = false;
@@ -60,9 +60,9 @@ public class DoctorLogin extends AppCompatActivity implements View.OnClickListen
             startActivity(new Intent(getApplicationContext(),DoctorProfileActivity.class));
         }
 
-        doctorLoginEmail = (EditText) findViewById(R.id.patientLoginEmail);
-        doctorLoginPassword = (EditText) findViewById(R.id.patientLoginPassword);
-        doctorLoginButton = (Button) findViewById(R.id.patientLoginButton);
+        doctorLoginEmail = (EditText) findViewById(R.id.doctorLoginEmail);
+        doctorLoginPassword = (EditText) findViewById(R.id.doctorLoginPassword);
+        doctorLoginButton = (Button) findViewById(R.id.doctorLoginButton);
         firebaseAuth = FirebaseAuth.getInstance();
         currUser = firebaseAuth.getCurrentUser();
         doctorLoginButton.setOnClickListener(this);
