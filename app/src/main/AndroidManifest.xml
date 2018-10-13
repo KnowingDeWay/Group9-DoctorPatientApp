@@ -54,6 +54,7 @@
         <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" android:screenOrientation="portrait" />
         <activity android:name=".doctorfeedback.DoctorFeedbackActivity" android:screenOrientation="portrait" />
         <activity android:name=".consultdoctor.ChooseDoctorActivity" android:screenOrientation="portrait" android:theme="@style/StandardTheme"/>
+        <activity android:name=".consultdoctor.UploadVideoActivity" android:screenOrientation="portrait" android:theme="@style/StandardTheme"/>
     </application>
 
 </manifest>

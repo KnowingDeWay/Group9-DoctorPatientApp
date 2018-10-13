@@ -17,6 +17,12 @@ import android.widget.VideoView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -26,6 +32,7 @@ import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UploadVideoActivity extends AppCompatActivity {
@@ -38,7 +45,12 @@ public class UploadVideoActivity extends AppCompatActivity {
     private Button upload;
     private Button download;
     private EditText videoName;
-
+    private DataPacket packet;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    public String referenceString;
+    private String packetId;
+    private String userId;
 
     public UploadVideoActivity(){
 
@@ -82,11 +94,50 @@ public class UploadVideoActivity extends AppCompatActivity {
                 download();
             }
         });
+
+        userId = auth.getCurrentUser().getUid();
+        database = FirebaseDatabase.getInstance();
+        referenceString = "Users/Patients/" + userId + "/Packets";
+        packetId = getIntent().getStringExtra("packet");
+        databaseReference = database.getReference(referenceString);
+        getPacket();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPacket();
+    }
+
+    public void getPacket(){
+        Query query = databaseReference.orderByKey().equalTo(packetId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    packet = snapshot.getValue(DataPacket.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void addToMediaFileReference(String referencePath){
+        if(packet.mediaReferences == null){
+            packet.mediaReferences = new ArrayList<>();
+        }
+        packet.mediaReferences.add(referencePath);
+        databaseReference.child(packetId).setValue(packet);
     }
 
     public void uploadVideo(){
         if (videoUri != null){
             UploadTask uploadTask = videoRef.putFile(videoUri);
+            addToMediaFileReference("users/" + auth.getCurrentUser().getUid() + "/media/video/" +  videoName.getText().toString() +".3gp");
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {

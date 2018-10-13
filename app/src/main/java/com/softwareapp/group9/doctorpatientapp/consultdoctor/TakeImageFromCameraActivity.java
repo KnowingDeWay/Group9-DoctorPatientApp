@@ -21,6 +21,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -29,6 +35,7 @@ import com.softwareapp.group9.doctorpatientapp.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TakeImageFromCameraActivity extends AppCompatActivity {
     private static final String TAG = "UploadActivity";
@@ -40,6 +47,12 @@ public class TakeImageFromCameraActivity extends AppCompatActivity {
     private final int PICK_IMAGE_REQUEST = 71;
     private StorageReference mStorageRef;
     private FirebaseAuth auth;
+    private DataPacket packet;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    public String referenceString;
+    private String packetId;
+    private String userId;
 
     public TakeImageFromCameraActivity(){
 
@@ -55,7 +68,12 @@ public class TakeImageFromCameraActivity extends AppCompatActivity {
         btnTakeImage=(Button) findViewById(R.id.btnOpenCamera);
         mProgressDialog = new ProgressDialog(TakeImageFromCameraActivity.this);
         auth = FirebaseAuth.getInstance();
-
+        userId = auth.getCurrentUser().getUid();
+        database = FirebaseDatabase.getInstance();
+        referenceString = "Users/Patients/" + userId + "/Packets";
+        packetId = getIntent().getStringExtra("packet");
+        databaseReference = database.getReference(referenceString);
+        getPacket();
        //Firebase init
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -72,6 +90,31 @@ public class TakeImageFromCameraActivity extends AppCompatActivity {
                 uplaod();
             }
         });
+    }
+
+    public void getPacket(){
+        Query query = databaseReference.orderByKey().equalTo(packetId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    packet = snapshot.getValue(DataPacket.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void addToMediaFileReference(String referencePath){
+        if(packet.mediaReferences == null){
+            packet.mediaReferences = new ArrayList<>();
+        }
+        packet.mediaReferences.add(referencePath);
+        databaseReference.child(packetId).setValue(packet);
     }
 
     public void takeImage(){
@@ -100,6 +143,7 @@ public class TakeImageFromCameraActivity extends AppCompatActivity {
 
 
             StorageReference ref = mStorageRef.child("users/" + userID.toString() + "/media/image/" + name + ".jpg");
+            addToMediaFileReference("users/" + userID.toString() + "/media/image/" + name + ".jpg");
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

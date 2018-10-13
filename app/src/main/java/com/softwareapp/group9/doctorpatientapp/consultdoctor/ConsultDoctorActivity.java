@@ -29,6 +29,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -52,6 +56,8 @@ import com.softwareapp.group9.doctorpatientapp.medicalcondition.ViewMedicalCondi
 import com.softwareapp.group9.doctorpatientapp.userprofile.PatientProfileActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+
 import android.app.ProgressDialog;
 
 public class ConsultDoctorActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ChangePhotoDialog.OnPhotoReceivedListener, UploadActivity.OnPhotoReceivedListener {
@@ -64,6 +70,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
     private ImageView imageViewPatient;
     private String mSelectedImagePath;
     private Button btnConsultDoctor;
+    private DataPacket packet;
 
     private StorageReference mStorageRef;
     private FirebaseAuth auth;
@@ -83,9 +90,13 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
     FirebaseDatabase database;
     ProgressDialog progressDialog;
 
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase packetDb;
+    private String dbReference;
     private FirebaseUser user;
     private String userId;
     private String reference;
+    private String packetId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +113,15 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         navigationView.setNavigationItemSelectedListener(this);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-        if(user != null){
+        if(user != null) {
             userId = user.getUid();
             reference = "users/" + userId + "/files";
         }
+        packetDb = FirebaseDatabase.getInstance();
+        dbReference = "Users/Patients/" + userId + "/Packets";
+        databaseReference = packetDb.getReference(dbReference);
+        packetId = databaseReference.push().getKey();
+        packet = createPacket();
         setTitle("Consult Doctor");
         imageViewPatient = (ImageView) findViewById(R.id.imageViewPatient);
      //   btnConsultDoctor = (Button) findViewById(R.id.btnConsultDoctor);
@@ -120,6 +136,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
                  */
 
                 ChangePhotoDialog dialog = new ChangePhotoDialog();
+                dialog.packetId = packetId;
                 dialog.show(getFragmentManager(), getString(R.string.change_photo_dialog));
 //                Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
 //                startActivity(intent);
@@ -157,12 +174,54 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pdfUri != null)
+                if (pdfUri != null){
                     uploadFile(pdfUri);
+                }
+                
+                 /**
                 else
                     Toast.makeText(ConsultDoctorActivity.this, "Select File", Toast.LENGTH_SHORT).show();
+                  **/
+            }
+
+        });
+    }
+
+    public void getPacket(){
+        Query query = databaseReference.orderByKey().equalTo(packetId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    packet = snapshot.getValue(DataPacket.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPacket();
+    }
+
+    public DataPacket createPacket(){
+        DataPacket dataPacket = new DataPacket();
+        databaseReference.child(packetId).setValue(dataPacket);
+        return dataPacket;
+    }
+
+    public void addToPacketFileReference(String referencePath){
+        if(packet.filesReferences == null){
+            packet.filesReferences = new ArrayList<>();
+        }
+        packet.filesReferences.add(referencePath);
+        databaseReference.child(packetId).setValue(packet);
     }
 
             private void uploadFile(Uri pdfUri) {
@@ -175,13 +234,14 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
                 final String fileName=System.currentTimeMillis()+"";
                 StorageReference storageReference=storage.getReference(reference); //Returns root path
+                addToPacketFileReference(reference + "/" + fileName + ".pdf");
                 storageReference.child(fileName).putFile(pdfUri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 String url=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();//returns the uploaded file..
                                 // store url in realtime database
-                                DatabaseReference reference=database.getReference(); //returns the path to root
+                                final DatabaseReference reference=database.getReference(); //returns the path to root
 
                                 reference.child(fileName).setValue(url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -254,8 +314,6 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
             Toast.makeText(ConsultDoctorActivity.this,"Select a file",Toast.LENGTH_SHORT).show();        }
 
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){
