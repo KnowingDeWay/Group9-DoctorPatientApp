@@ -18,4 +18,9 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="change_photo_dialog">ChangePhotoDialog</string>
+
+    <string name="name">HeartBeat</string>
+    <string name="default_text">000</string>
+    <string name="unit">bpm</string>
+    <string name="details">detail</string>
 </resources>
