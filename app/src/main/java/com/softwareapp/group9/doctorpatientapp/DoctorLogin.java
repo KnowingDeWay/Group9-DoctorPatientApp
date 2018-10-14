@@ -71,6 +71,13 @@ public class DoctorLogin extends AppCompatActivity implements View.OnClickListen
 
         progressDialog = new ProgressDialog(this);
 
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 
         getSupportActionBar().setTitle("Doctor Login");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -114,7 +121,7 @@ public class DoctorLogin extends AppCompatActivity implements View.OnClickListen
                             String userId = currUser.getUid();
                             final FirebaseDatabase database = FirebaseDatabase.getInstance();
                             DatabaseReference reference = database.getReference("Users/Doctors");
-                            Query query = reference.orderByChild("id").equalTo(userId).limitToFirst(1);
+                            Query query = reference.orderByKey().equalTo(userId).limitToFirst(1);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

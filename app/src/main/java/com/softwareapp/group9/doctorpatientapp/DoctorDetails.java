@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.softwareapp.group9.doctorpatientapp.userprofile.BackDialogActivity;
+import com.softwareapp.group9.doctorpatientapp.userprofile.ContinueToDoctorProfileDialogBox;
 import com.softwareapp.group9.doctorpatientapp.userprofile.ContinueToProfileDialogBox;
 import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
 import com.softwareapp.group9.doctorpatientapp.userprofile.PatientLogin;
@@ -50,6 +51,8 @@ public class DoctorDetails extends AppCompatActivity implements View.OnClickList
         regDocSurname = (EditText) findViewById(R.id.regDocSurname);
         regDocOtherName = (EditText) findViewById(R.id.regDocOtherName);
         regDocDepartment = (EditText) findViewById(R.id.regDocDepartment);
+        logoutButton = (Button) findViewById(R.id.doctorLogoutButton);
+        doctorSaveButton = (Button) findViewById(R.id.doctorSaveButton);
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
@@ -116,7 +119,7 @@ public class DoctorDetails extends AppCompatActivity implements View.OnClickList
     }
 
     public void showContinueDialog(String title, String message){
-        ContinueToProfileDialogBox dialog = new ContinueToProfileDialogBox();
+        ContinueToDoctorProfileDialogBox dialog = new ContinueToDoctorProfileDialogBox();
         dialog.setCustomTitle(title);
         dialog.setDialogText(message);
         dialog.show(getSupportFragmentManager(), title);

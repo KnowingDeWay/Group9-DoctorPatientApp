@@ -64,10 +64,10 @@
             android:name=".DoctorRegister"
             android:parentActivityName=".userprofile.ChoiceRegister"
             android:screenOrientation="portrait" />
-        <!-- <activity android:name=".DoctorInformation" /> -->>
+        <!-- <activity android:name=".DoctorInformation" /> -->
       <activity android:name=".DoctorDetails" />
       <activity android:name=".DoctorLogin" />
-        <!-- <activity android:name=".DoctorProfile"></activity> -->>
+        <!-- <activity android:name=".DoctorProfile"></activity> -->
  </application>
 
 </manifest>

@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.softwareapp.group9.doctorpatientapp.userprofile.BackDialogActivity;
 import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
+import com.softwareapp.group9.doctorpatientapp.userprofile.DoctorBackDialogActivity;
 
 public class DoctorRegister extends AppCompatActivity implements View.OnClickListener {
 
@@ -129,7 +130,7 @@ public class DoctorRegister extends AppCompatActivity implements View.OnClickLis
     }
 
     public void showBackDialog(String title, String message){
-        BackDialogActivity dialog = new BackDialogActivity();
+        DoctorBackDialogActivity dialog = new DoctorBackDialogActivity();
         dialog.setCustomTitle(title);
         dialog.setDialogText(message);
         dialog.show(getSupportFragmentManager(), title);
