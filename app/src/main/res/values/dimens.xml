@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="add_condition_button_offset">15dp</dimen>
     <dimen name="normal_text_size">18sp</dimen>
     <dimen name="padding_top_user_profile">20dp</dimen>
 </resources>

@@ -7,16 +7,39 @@
     android:id="@+id/drawer_layout_patient"
     tools:context=".medicalcondition.ViewMedicalConditionActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include layout="@layout/nav_bar_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <include layout="@layout/nav_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/conditionRv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/addConditionBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@string/medical_condition_add_button"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/add_condition_button_offset"
+            android:onClick="loadAddConditionScreen"/>
+
+    </FrameLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/patientNv"

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ScrollView01"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    android:theme="@style/StandardTheme"
+    tools:context=".medicalcondition.AddMedicalConditionActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
+
+        <!--Put form controls here-->
+        <TextView
+            android:id="@+id/addConditionTitleTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/add_medical_condition_field_1"
+            android:textSize="10pt"/>
+
+        <EditText
+            android:id="@+id/addConditionTitleEt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="@string/add_medical_condition_edit_field_1"
+            android:inputType="textPersonName"/>
+
+        <TextView
+            android:id="@+id/addConditionDescTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/add_medical_condition_field_2"
+            android:textSize="10pt"/>
+
+        <EditText
+            android:id="@+id/addConditionDescEt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:hint="@string/add_medical_condition_edit_field_2"
+            android:inputType="textMultiLine"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:onClick="addMedicalCondition"
+            android:text="@string/medical_condition_add_button" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:onClick="cancelAddConditionScreen"
+            android:text="@string/add_medical_condition_cancel_button" />
+
+
+    </LinearLayout>
+</ScrollView>

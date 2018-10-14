@@ -23,7 +23,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
-        -->
         <activity
             android:name=".userprofile.ChoiceRegister"
             android:parentActivityName=".userprofile.LaunchScreen"
@@ -65,6 +64,7 @@
         <!-- <activity android:name=".DoctorInformation" /> -->
       <activity android:name=".DoctorDetails" />
       <activity android:name=".DoctorLogin" />
+        <activity android:name=".medicalcondition.AddMedicalConditionActivity" android:theme="@style/StandardTheme" android:screenOrientation="portrait"/>
         <!-- <activity android:name=".DoctorProfile"></activity> -->
  </application>
 
