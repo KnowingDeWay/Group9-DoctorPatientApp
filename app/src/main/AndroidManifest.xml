@@ -10,7 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -37,7 +38,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".registration.RegistrationActivity" android:theme="@style/StandardTheme" />
         <activity
             android:name=".userprofile.ChoiceRegister"
             android:parentActivityName=".userprofile.LaunchScreen"
@@ -49,38 +49,33 @@
         <activity
             android:name=".userprofile.PatientLogin"
             android:parentActivityName=".userprofile.ChoiceRegister"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
+        <activity android:name=".userprofile.PatientDetails"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".userprofile.PatientDetails"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".userprofile.DoctorProfileActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/StandardTheme" />
-        <activity
-            android:name=".medicalcondition.ViewMedicalConditionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".consultdoctor.ConsultDoctorActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".facilitiesnearme.FacilitiesNearMeActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".doctorfeedback.DoctorFeedbackActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".userprofile.PatientProfileActivity"
-            android:screenOrientation="portrait" />
+            android:name=".registration.RegistrationActivity"
+            android:theme="@style/StandardTheme"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".userprofile.PatientProfileActivity" android:screenOrientation="portrait" />
         <activity
             android:name=".DoctorRegister"
             android:parentActivityName=".userprofile.ChoiceRegister"
             android:screenOrientation="portrait" />
-        <!-- <activity android:name=".DoctorInformation" /> -->
-      <activity android:name=".DoctorDetails" />
-      <activity android:name=".DoctorLogin" />
+        <activity android:name=".DoctorDetails" android:screenOrientation="portrait"/>
+        <activity android:name=".DoctorLogin" android:screenOrientation="portrait" />
+        <activity android:name=".consultdoctor.HeartRate" android:screenOrientation="portrait" />
+        <activity
+            android:name=".userprofile.DoctorProfileActivity"
+            android:theme="@style/StandardTheme"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".medicalcondition.ViewMedicalConditionActivity" android:screenOrientation="portrait" />
+        <activity android:name=".consultdoctor.ConsultDoctorActivity" android:screenOrientation="portrait" />
+        <activity android:name=".consultdoctor.UploadActivity" android:screenOrientation="portrait" />
+        <activity android:name=".facilitiesnearme.FacilitiesNearMeActivity" android:screenOrientation="portrait" />
+        <activity android:name=".doctorfeedback.DoctorFeedbackActivity" android:screenOrientation="portrait" />
+        <activity android:name=".consultdoctor.ChooseDoctorActivity" android:screenOrientation="portrait" android:theme="@style/StandardTheme"/>
+        <activity android:name=".consultdoctor.UploadVideoActivity" android:screenOrientation="portrait" android:theme="@style/StandardTheme"/>
         <activity android:name=".medicalcondition.AddMedicalConditionActivity" android:theme="@style/StandardTheme" android:screenOrientation="portrait"/>
-        <!-- <activity android:name=".DoctorProfile"></activity> -->
- </application>
+    </application>
 
 </manifest>

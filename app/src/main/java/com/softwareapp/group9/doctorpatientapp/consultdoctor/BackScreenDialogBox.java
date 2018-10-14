@@ -1,4 +1,4 @@
-package com.softwareapp.group9.doctorpatientapp.userprofile;
+package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 
 
 
@@ -7,8 +7,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 
 import android.content.DialogInterface;
-
-import android.content.Intent;
 
 import android.os.Bundle;
 
@@ -24,11 +22,9 @@ import android.widget.TextView;
 
 import com.softwareapp.group9.doctorpatientapp.R;
 
-import com.softwareapp.group9.doctorpatientapp.userprofile.PatientDetails;
 
 
-
-public class BackDialogActivity extends AppCompatDialogFragment {
+public class BackScreenDialogBox extends AppCompatDialogFragment {
 
     private TextView customTxt;
 
@@ -56,9 +52,15 @@ public class BackDialogActivity extends AppCompatDialogFragment {
 
                 getActivity().finish();
 
-                Intent intent = new Intent(getContext(), PatientDetails.class);
+            }
 
-                startActivity(intent);
+        }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+
+            public void onDismiss(DialogInterface dialog) {
+
+                getActivity().finish();
 
             }
 

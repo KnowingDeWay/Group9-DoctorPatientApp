@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change Photo"
+        android:text="Photo or Video"
         android:textSize="21sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -29,6 +29,14 @@
         android:layout_marginTop="20dp"
         android:textColor="@color/black"
         android:id="@+id/dialogChoosePhoto"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload video"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"
+        android:id="@+id/dialogUplaodVideo"/>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
