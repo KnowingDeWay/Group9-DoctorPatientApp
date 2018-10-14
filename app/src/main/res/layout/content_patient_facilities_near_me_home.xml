@@ -7,25 +7,71 @@
     android:id="@+id/drawer_layout_patient"
     tools:context=".facilitiesnearme.FacilitiesNearMeActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/nav_bar_layout"
+        <include
+            layout="@layout/nav_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="570dp"
+                android:layout_weight="1"
+                tools:context="com.androidtutorialpoint.googlemapsnearbyplaces.MapsActivity"
+                tools:layout_width="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnHospital"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Nearby Hospitals" />
+
+                    <Button
+                        android:id="@+id/btnPharmacy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Nearby Pharmacy" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/patientNv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:menu="@menu/patient_navigation_menu"
         android:layout_gravity="start"
-        app:headerLayout="@layout/nav_bar_action_header">
+        app:headerLayout="@layout/nav_bar_action_header"
+        app:menu="@menu/patient_navigation_menu">
 
     </android.support.design.widget.NavigationView>
+
 
 </android.support.v4.widget.DrawerLayout>

@@ -84,7 +84,10 @@
         },
         {
           "client_id": "1076171878629-hoj7igvgjdknoll9pgbg678nv3tmemk4.apps.googleusercontent.com",
-          "client_type": 3
+          "client_type": 3,
+          "android_info": {
+            "package_name": "com.softwareapp.group9.doctorpatientapp",
+            "certificate_hash": "9df2a819b3012a7e4aa8222060e0a0732de10a62"
         }
       ],
       "api_key": [
