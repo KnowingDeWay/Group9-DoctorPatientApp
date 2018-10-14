@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.softwareapp.group9.doctorpatientapp.R;
-import com.softwareapp.group9.doctorpatientapp.consultdoctor.BackDialogActivity;
 import com.softwareapp.group9.doctorpatientapp.consultdoctor.ConsultDoctorActivity;
 import com.softwareapp.group9.doctorpatientapp.doctorfeedback.DoctorFeedbackActivity;
 import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.FacilitiesNearMeActivity;

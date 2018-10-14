@@ -19,7 +19,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.softwareapp.group9.doctorpatientapp.userprofile.BackDialogActivity;
 import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
 import com.softwareapp.group9.doctorpatientapp.userprofile.DoctorBackDialogActivity;
 

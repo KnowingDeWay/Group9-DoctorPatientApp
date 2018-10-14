@@ -151,7 +151,7 @@ public class Doctor_MapsActivity extends FragmentActivity implements OnMapReadyC
         }
 
 
-        btnhospital = (Button) findViewById(R.id.btnhospital);
+        btnhospital = (Button) findViewById(R.id.btnHospital);
         btnhospital.setOnClickListener(new View.OnClickListener() {
             String hospital = "hospital";
             @Override

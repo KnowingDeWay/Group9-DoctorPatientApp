@@ -23,6 +23,7 @@
     <string name="profile_weight_text">Weight:</string>
     <string name="profile_address_text">Address:</string>
     <string name="profile_submit_button_text">Update Profile</string>
+    <string name="profile_department_text">Department:</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="change_photo_dialog">ChangePhotoDialog</string>

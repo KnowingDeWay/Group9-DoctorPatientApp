@@ -58,9 +58,9 @@ public class DoctorProfileActivity extends AppCompatActivity implements Navigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_doctor_profile_home);
-        mToolbar = (Toolbar) findViewById(R.id.appTb);
+        mToolbar = (Toolbar) findViewById(R.id.doctorAppTb);
         setSupportActionBar(mToolbar);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_patient); //Might Change drawer Layout
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_doctor); //Might Change drawer Layout
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
@@ -197,9 +197,18 @@ public class DoctorProfileActivity extends AppCompatActivity implements Navigati
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        //int id  = item.getItemId();
+        int id  = item.getItemId();
         //Plan here is to have all the home screens of all the other features in one project so that our navigation bar can access them
-        //switch(id) {
+        switch(id) {
+            case R.id.doctor_nav_profile: Intent intent3 = new Intent(this, DoctorProfileActivity.class); startActivity(intent3); break;
+            case R.id.doctor_nav_view_patients: Intent intent4 = new Intent(this, DoctorViewPatients.class); startActivity(intent4); break;
+            case R.id.doctor_nav_logout:
+                Intent closingIntent = new Intent(getApplicationContext(), LaunchScreen.class);
+                closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                auth.signOut();
+                startActivity(closingIntent);
+                break;
+        }
         //case R.id.nav_condition: Intent intent2 = new Intent(this, ViewMedicalConditionActivity.class); startActivity(intent2); break;
         // case R.id.nav_consult: Intent intent3 = new Intent(this, ConsultDoctorActivity.class); startActivity(intent3); break;
         //case R.id.nav_facilities: Intent intent4 = new Intent(this, FacilitiesNearMeActivity.class); startActivity(intent4); break;

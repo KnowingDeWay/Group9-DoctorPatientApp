@@ -11,6 +11,7 @@ public class DoctorInformation {
     public String docSurname;
     public String docOtherName;
     public String docDepartment;
+    public String docFullName;
 
     public DoctorInformation() {
 
@@ -32,6 +33,7 @@ public class DoctorInformation {
         this.docSurname = docSurname;
         this.docOtherName = docOtherName;
         this.docDepartment = docDepartment;
+        this.docFullName = docOtherName + " " + docSurname;
 
     }
 
