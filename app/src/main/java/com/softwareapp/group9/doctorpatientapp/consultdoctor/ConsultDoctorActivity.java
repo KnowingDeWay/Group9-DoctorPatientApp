@@ -3,9 +3,11 @@ package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 import android.app.ProgressDialog;
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,9 +19,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.TextView;
@@ -53,6 +57,7 @@ import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.doctorfeedback.DoctorFeedbackActivity;
 import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.FacilitiesNearMeActivity;
 import com.softwareapp.group9.doctorpatientapp.medicalcondition.ViewMedicalConditionActivity;
+import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
 import com.softwareapp.group9.doctorpatientapp.userprofile.PatientProfileActivity;
 
 import java.io.ByteArrayOutputStream;
@@ -97,6 +102,8 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
     private String userId;
     private String reference;
     private String packetId;
+    private EditText conditionEt;
+    private EditText descriptionEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +129,10 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         databaseReference = packetDb.getReference(dbReference);
         packetId = databaseReference.push().getKey();
         packet = createPacket();
+        packet.packetId = packetId;
+        setPacket();
+        conditionEt = (EditText) findViewById(R.id.editText4);
+        descriptionEt = (EditText) findViewById(R.id.editText3);
         setTitle("Consult Doctor");
         imageViewPatient = (ImageView) findViewById(R.id.imageViewPatient);
      //   btnConsultDoctor = (Button) findViewById(R.id.btnConsultDoctor);
@@ -177,7 +188,20 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
                 if (pdfUri != null){
                     uploadFile(pdfUri);
                 }
-                
+                String condition = conditionEt.getText().toString();
+                String description = conditionEt.getText().toString();
+                if(TextUtils.isEmpty(condition)){
+                    showDialog("Error", "Please enter condition.");
+                } else {
+                    packet.patientId = user.getUid();
+                    packet.condition = condition;
+                    packet.description = description;
+                    databaseReference.child(packetId).setValue(packet);
+                    Intent intent = new Intent(getApplicationContext(), ChooseDoctorActivity.class);
+                    intent.putExtra("packetId", packetId);
+                    startActivity(intent);
+                    finish();
+                }
                  /**
                 else
                     Toast.makeText(ConsultDoctorActivity.this, "Select File", Toast.LENGTH_SHORT).show();
@@ -185,6 +209,10 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
             }
 
         });
+    }
+
+    public void setPacket(){
+        databaseReference.child(packetId).setValue(packet);
     }
 
     public void getPacket(){
@@ -246,9 +274,9 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
                                 reference.child(fileName).setValue(url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful())
-                                            Toast.makeText(ConsultDoctorActivity.this,"File Uploaded",Toast.LENGTH_SHORT).show();
-                                        else
+                                        if(task.isSuccessful()) {
+                                            Toast.makeText(ConsultDoctorActivity.this, "File Uploaded", Toast.LENGTH_SHORT).show();
+                                        } else
                                             Toast.makeText(ConsultDoctorActivity.this,"File Not Uploaded",Toast.LENGTH_SHORT).show();
 
                                     }
@@ -259,7 +287,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ConsultDoctorActivity.this,"Fill Not Uploaded",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConsultDoctorActivity.this,"File Not Uploaded",Toast.LENGTH_SHORT).show();
 
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -313,6 +341,37 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         else{
             Toast.makeText(ConsultDoctorActivity.this,"Select a file",Toast.LENGTH_SHORT).show();        }
 
+    }
+
+    public boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void showDialog(String title, String message){
+        CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
+    }
+
+    public boolean showConfirmRollbackDialog(String title, String message){
+        ConfirmRollbackDialog dialog = new ConfirmRollbackDialog();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.setDataPacket(packet);
+        dialog.show(getSupportFragmentManager(), title);
+        return dialog.continueBack;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(showConfirmRollbackDialog("Notice", "Going back will delete and cancel the transmission of your data. " +
+                "Are you sure you want to go back?")){
+            super.onBackPressed();
+        } else {
+
+        }
     }
 
     @Override

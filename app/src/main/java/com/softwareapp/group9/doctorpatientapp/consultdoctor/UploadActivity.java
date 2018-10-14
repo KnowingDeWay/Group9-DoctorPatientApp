@@ -160,11 +160,13 @@ public class UploadActivity extends AppCompatActivity{
 
 
             StorageReference ref = mStorageRef.child("users/" + userID.toString() + "/media/image/" + name + ".jpg");
-            addToMediaFileReference("users/" + userID.toString() + "/media/image/"  + name + ".jpg");
+            final String successUid = user.getUid();
+            final String successName = name;
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.dismiss();
+                    addToMediaFileReference("users/" + successUid + "/media/image/"  + successName + ".jpg");
                     Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                 }
             })

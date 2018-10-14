@@ -3,6 +3,7 @@ package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +34,13 @@ public class ChooseDoctorActivity extends AppCompatActivity {
     private String referenceString;
     private ArrayList<DoctorInformation> list;
     private ProgressDialog dialog;
+    private String packetId;
+    private DataPacket packet;
+    private DatabaseReference databaseReference;
+    private String packetReferenceString;
+    private FirebaseAuth auth;
+    private String userId;
+    private boolean packetReceived;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,12 @@ public class ChooseDoctorActivity extends AppCompatActivity {
         list = new ArrayList<>();
         dialog = new ProgressDialog(this);
         dialog.setMessage("Searching...");
+        auth = FirebaseAuth.getInstance();
+        userId = auth.getCurrentUser().getUid();
+        packetReferenceString = "Users/Patients/" + userId + "/Packets";
+        databaseReference = database.getReference(packetReferenceString);
+        packetId = getIntent().getStringExtra("packetId");
+        packetReceived = false;
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -98,6 +113,24 @@ public class ChooseDoctorActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    public void getPacket(){
+        Query query = databaseReference.orderByKey().equalTo(packetId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    packet = snapshot.getValue(DataPacket.class);
+                }
+                adapter.setAdapterPacket(packet);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void initialiseData(){
         Query query = reference.orderByKey();
         query.addValueEventListener(new ValueEventListener() {
@@ -107,6 +140,7 @@ public class ChooseDoctorActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DoctorInformation information = snapshot.getValue(DoctorInformation.class);
                     list.add(information);
+                    getPacket();
                     adapter.setSearchOperation(list);
                 }
             }

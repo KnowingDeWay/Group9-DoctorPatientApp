@@ -137,7 +137,6 @@ public class UploadVideoActivity extends AppCompatActivity {
     public void uploadVideo(){
         if (videoUri != null){
             UploadTask uploadTask = videoRef.putFile(videoUri);
-            addToMediaFileReference("users/" + auth.getCurrentUser().getUid() + "/media/video/" +  videoName.getText().toString() +".3gp");
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -146,6 +145,7 @@ public class UploadVideoActivity extends AppCompatActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    addToMediaFileReference("users/" + auth.getCurrentUser().getUid() + "/media/video/" +  videoName.getText().toString() +".3gp");
                     Toast.makeText(UploadVideoActivity.this, "Uplaod complete", Toast.LENGTH_LONG).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
