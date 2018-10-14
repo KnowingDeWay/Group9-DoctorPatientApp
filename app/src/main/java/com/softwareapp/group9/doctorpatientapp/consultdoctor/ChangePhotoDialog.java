@@ -23,7 +23,7 @@ import java.io.File;
 
 public class ChangePhotoDialog extends DialogFragment {
     private static final String TAG = "ChangePhotoDialog";
-
+    public String packetId;
 
     public interface OnPhotoReceivedListener{
         public void getBitmapImage(Bitmap bitmap);
@@ -46,6 +46,7 @@ public class ChangePhotoDialog extends DialogFragment {
 //                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                startActivityForResult(cameraIntent, Init.CAMER_REQUEST_CODE);
                 Intent intent = new Intent(getContext(), TakeImageFromCameraActivity.class);
+                intent.putExtra("packet", packetId);
                 startActivity(intent);
             }
         });
@@ -58,6 +59,7 @@ public class ChangePhotoDialog extends DialogFragment {
             public void onClick(View v) {
                 Log.d(TAG,"onClick: accessing phones memory.");
                 Intent intent = new Intent(getContext(), UploadActivity.class);
+                intent.putExtra("packet", packetId);
                 startActivity(intent);
             }
         });
@@ -70,6 +72,7 @@ public class ChangePhotoDialog extends DialogFragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: select or record video");
                 Intent intent = new Intent(getContext(), UploadVideoActivity.class);
+                intent.putExtra("packet", packetId);
                 startActivity(intent);
             }
         });

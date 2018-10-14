@@ -3,9 +3,11 @@ package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 import android.app.ProgressDialog;
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,9 +19,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.TextView;
@@ -29,6 +33,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -49,9 +57,12 @@ import com.softwareapp.group9.doctorpatientapp.R;
 import com.softwareapp.group9.doctorpatientapp.doctorfeedback.DoctorFeedbackActivity;
 import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.FacilitiesNearMeActivity;
 import com.softwareapp.group9.doctorpatientapp.medicalcondition.ViewMedicalConditionActivity;
+import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
 import com.softwareapp.group9.doctorpatientapp.userprofile.PatientProfileActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+
 import android.app.ProgressDialog;
 
 public class ConsultDoctorActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ChangePhotoDialog.OnPhotoReceivedListener, UploadActivity.OnPhotoReceivedListener {
@@ -64,6 +75,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
     private ImageView imageViewPatient;
     private String mSelectedImagePath;
     private Button btnConsultDoctor;
+    private DataPacket packet;
 
     private StorageReference mStorageRef;
     private FirebaseAuth auth;
@@ -83,9 +95,15 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
     FirebaseDatabase database;
     ProgressDialog progressDialog;
 
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase packetDb;
+    private String dbReference;
     private FirebaseUser user;
     private String userId;
     private String reference;
+    private String packetId;
+    private EditText conditionEt;
+    private EditText descriptionEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +120,19 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         navigationView.setNavigationItemSelectedListener(this);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-        if(user != null){
+        if(user != null) {
             userId = user.getUid();
             reference = "users/" + userId + "/files";
         }
+        packetDb = FirebaseDatabase.getInstance();
+        dbReference = "Users/Patients/" + userId + "/Packets";
+        databaseReference = packetDb.getReference(dbReference);
+        packetId = databaseReference.push().getKey();
+        packet = createPacket();
+        packet.packetId = packetId;
+        setPacket();
+        conditionEt = (EditText) findViewById(R.id.editText4);
+        descriptionEt = (EditText) findViewById(R.id.editText3);
         setTitle("Consult Doctor");
         imageViewPatient = (ImageView) findViewById(R.id.imageViewPatient);
      //   btnConsultDoctor = (Button) findViewById(R.id.btnConsultDoctor);
@@ -120,6 +147,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
                  */
 
                 ChangePhotoDialog dialog = new ChangePhotoDialog();
+                dialog.packetId = packetId;
                 dialog.show(getFragmentManager(), getString(R.string.change_photo_dialog));
 //                Intent intent = new Intent(getApplicationContext(), UploadActivity.class);
 //                startActivity(intent);
@@ -157,12 +185,71 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pdfUri != null)
+                if (pdfUri != null){
                     uploadFile(pdfUri);
+                }
+                String condition = conditionEt.getText().toString();
+                String description = conditionEt.getText().toString();
+                if(TextUtils.isEmpty(condition)){
+                    showDialog("Error", "Please enter condition.");
+                } else {
+                    packet.patientId = user.getUid();
+                    packet.condition = condition;
+                    packet.description = description;
+                    databaseReference.child(packetId).setValue(packet);
+                    Intent intent = new Intent(getApplicationContext(), ChooseDoctorActivity.class);
+                    intent.putExtra("packetId", packetId);
+                    startActivity(intent);
+                    finish();
+                }
+                 /**
                 else
                     Toast.makeText(ConsultDoctorActivity.this, "Select File", Toast.LENGTH_SHORT).show();
+                  **/
+            }
+
+        });
+    }
+
+    public void setPacket(){
+        databaseReference.child(packetId).setValue(packet);
+    }
+
+    public void getPacket(){
+        Query query = databaseReference.orderByKey().equalTo(packetId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    packet = snapshot.getValue(DataPacket.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPacket();
+    }
+
+    public DataPacket createPacket(){
+        DataPacket dataPacket = new DataPacket();
+        databaseReference.child(packetId).setValue(dataPacket);
+        return dataPacket;
+    }
+
+    public void addToPacketFileReference(String referencePath){
+        if(packet.filesReferences == null){
+            packet.filesReferences = new ArrayList<>();
+        }
+        packet.filesReferences.add(referencePath);
+        databaseReference.child(packetId).setValue(packet);
     }
 
             private void uploadFile(Uri pdfUri) {
@@ -175,20 +262,21 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
                 final String fileName=System.currentTimeMillis()+"";
                 StorageReference storageReference=storage.getReference(reference); //Returns root path
+                addToPacketFileReference(reference + "/" + fileName + ".pdf");
                 storageReference.child(fileName).putFile(pdfUri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 String url=taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();//returns the uploaded file..
                                 // store url in realtime database
-                                DatabaseReference reference=database.getReference(); //returns the path to root
+                                final DatabaseReference reference=database.getReference(); //returns the path to root
 
                                 reference.child(fileName).setValue(url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful())
-                                            Toast.makeText(ConsultDoctorActivity.this,"File Uploaded",Toast.LENGTH_SHORT).show();
-                                        else
+                                        if(task.isSuccessful()) {
+                                            Toast.makeText(ConsultDoctorActivity.this, "File Uploaded", Toast.LENGTH_SHORT).show();
+                                        } else
                                             Toast.makeText(ConsultDoctorActivity.this,"File Not Uploaded",Toast.LENGTH_SHORT).show();
 
                                     }
@@ -199,7 +287,7 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ConsultDoctorActivity.this,"Fill Not Uploaded",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ConsultDoctorActivity.this,"File Not Uploaded",Toast.LENGTH_SHORT).show();
 
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -227,6 +315,11 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
             Toast.makeText(ConsultDoctorActivity.this,"please provide permission..",Toast.LENGTH_SHORT).show();
     }
 
+    public void openTestWindow(View view){
+        Intent intent = new Intent(this, ChooseDoctorActivity.class);
+        startActivity(intent);
+    }
+
     private void selectPdf() {
 
         //to offer using file maneger
@@ -250,7 +343,32 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
     }
 
+    public boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
 
+    public void showDialog(String title, String message){
+        CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getSupportFragmentManager(), title);
+    }
+
+    public boolean showConfirmRollbackDialog(String title, String message){
+        ConfirmRollbackDialog dialog = new ConfirmRollbackDialog();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.setDataPacket(packet);
+        dialog.show(getSupportFragmentManager(), title);
+        return dialog.continueBack;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        databaseReference.child(packetId).removeValue();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem){

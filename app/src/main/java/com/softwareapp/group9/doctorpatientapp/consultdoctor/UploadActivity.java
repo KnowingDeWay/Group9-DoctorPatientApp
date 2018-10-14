@@ -27,6 +27,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -59,9 +65,12 @@ public class UploadActivity extends AppCompatActivity{
     private final int PICK_IMAGE_REQUEST = 71;
     private StorageReference mStorageRef;
     private FirebaseAuth auth;
-
-
-
+    private String packetId;
+    private DataPacket packet;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase database;
+    private String referenceString;
+    private String userId;
 
     public UploadActivity(){
 
@@ -78,8 +87,11 @@ public class UploadActivity extends AppCompatActivity{
 
         mProgressDialog = new ProgressDialog(UploadActivity.this);
         auth = FirebaseAuth.getInstance();
-
-
+        userId = auth.getCurrentUser().getUid();
+        packetId = getIntent().getStringExtra("packet");
+        database = FirebaseDatabase.getInstance();
+        referenceString = "Users/Patients/" + userId + "/Packets";
+        databaseReference = database.getReference(referenceString);
         //Firebase init
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
@@ -103,6 +115,37 @@ public class UploadActivity extends AppCompatActivity{
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPacket();
+    }
+
+    public void getPacket(){
+        Query query = databaseReference.orderByKey().equalTo(packetId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    packet = snapshot.getValue(DataPacket.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void addToMediaFileReference(String referencePath){
+        if(packet.mediaReferences == null){
+            packet.mediaReferences = new ArrayList<>();
+        }
+        packet.mediaReferences.add(referencePath);
+        databaseReference.child(packetId).setValue(packet);
+    }
+
     private void uploadImage() {
         //get the signed in user
         FirebaseUser user = auth.getCurrentUser();
@@ -117,10 +160,13 @@ public class UploadActivity extends AppCompatActivity{
 
 
             StorageReference ref = mStorageRef.child("users/" + userID.toString() + "/media/image/" + name + ".jpg");
+            final String successUid = user.getUid();
+            final String successName = name;
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.dismiss();
+                    addToMediaFileReference("users/" + successUid + "/media/image/"  + successName + ".jpg");
                     Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                 }
             })
