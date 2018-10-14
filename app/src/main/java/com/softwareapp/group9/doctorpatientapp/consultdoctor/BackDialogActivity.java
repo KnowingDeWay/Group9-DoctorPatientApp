@@ -1,4 +1,4 @@
-package com.softwareapp.group9.doctorpatientapp.userprofile;
+package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.softwareapp.group9.doctorpatientapp.R;
+import com.softwareapp.group9.doctorpatientapp.userprofile.PatientDetails;
 
 public class BackDialogActivity extends AppCompatDialogFragment {
     private TextView customTxt;

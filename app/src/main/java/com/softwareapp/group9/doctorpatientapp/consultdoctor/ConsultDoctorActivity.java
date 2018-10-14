@@ -366,12 +366,8 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
     @Override
     public void onBackPressed() {
-        if(showConfirmRollbackDialog("Notice", "Going back will delete and cancel the transmission of your data. " +
-                "Are you sure you want to go back?")){
-            super.onBackPressed();
-        } else {
-
-        }
+        super.onBackPressed();
+        databaseReference.child(packetId).removeValue();
     }
 
     @Override

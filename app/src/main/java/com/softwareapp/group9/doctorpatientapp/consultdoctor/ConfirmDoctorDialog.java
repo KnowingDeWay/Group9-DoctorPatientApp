@@ -40,9 +40,14 @@ public class ConfirmDoctorDialog extends AppCompatDialogFragment {
         builder.setView(view).setTitle(customTitle).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                packet.doctorId = doctorId;
-                reference.child(packet.packetId).setValue(packet);
-                getActivity().finish();
+                if(isConnected()){
+                    packet.doctorId = doctorId;
+                    reference.child(packet.packetId).setValue(packet);
+                    sendPacket();
+                    showBackDialog("Notice", "Packet was sent successfully");
+                } else {
+                    showDialog("Error", "Not connected to the internet");
+                }
             }
         }).setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -55,6 +60,12 @@ public class ConfirmDoctorDialog extends AppCompatDialogFragment {
         customTxt.setText(customMessage);
 
         return builder.create();
+    }
+
+    public void sendPacket(){
+        String sendReferenceString = "Users/Doctors/" + doctorId + "/Packets";
+        DatabaseReference reference = database.getReference(sendReferenceString);
+        reference.child(packet.packetId).setValue(packet);
     }
 
     public void setDialogText(String text) {
@@ -78,6 +89,13 @@ public class ConfirmDoctorDialog extends AppCompatDialogFragment {
 
     public void showDialog(String title, String message){
         CustomDialogBoxActivity dialog = new CustomDialogBoxActivity();
+        dialog.setCustomTitle(title);
+        dialog.setDialogText(message);
+        dialog.show(getActivity().getSupportFragmentManager(), title);
+    }
+
+    public void showBackDialog(String title, String message){
+        BackScreenDialogBox dialog = new BackScreenDialogBox();
         dialog.setCustomTitle(title);
         dialog.setDialogText(message);
         dialog.show(getActivity().getSupportFragmentManager(), title);

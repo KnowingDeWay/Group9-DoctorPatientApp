@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.softwareapp.group9.doctorpatientapp.R;
 
@@ -15,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
+import com.softwareapp.group9.doctorpatientapp.consultdoctor.BackDialogActivity;
 
 public class PatientDetails extends AppCompatActivity implements View.OnClickListener {
 
