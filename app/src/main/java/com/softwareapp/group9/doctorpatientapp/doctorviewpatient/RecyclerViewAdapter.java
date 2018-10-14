@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.softwareapp.group9.doctorpatientapp.R;
 
 import java.util.ArrayList;
