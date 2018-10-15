@@ -15,6 +15,7 @@ public class DataPacket {
     public ArrayList<String> mediaReferences;
     public ArrayList<String> filesReferences;
     public int heartBeat;
+    public String docRecommendation;
 
     public DataPacket(){
 
