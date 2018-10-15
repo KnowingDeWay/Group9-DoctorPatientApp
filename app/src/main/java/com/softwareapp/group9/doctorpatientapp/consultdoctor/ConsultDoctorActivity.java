@@ -120,6 +120,7 @@ import com.softwareapp.group9.doctorpatientapp.doctorfeedback.DoctorFeedbackActi
 
 import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.FacilitiesNearMeActivity;
 
+import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.UserLocation;
 import com.softwareapp.group9.doctorpatientapp.medicalcondition.ViewMedicalConditionActivity;
 
 import com.softwareapp.group9.doctorpatientapp.userprofile.CustomDialogBoxActivity;
@@ -253,16 +254,6 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
         }
 
-        mapReference = "Users/Patients/" + userId + "/location";
-
-        FirebaseApp.initializeApp(this);
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mLocationDatabaseReference = mFirebaseDatabase.getReference(mapReference);
-        mLatitudeText = (TextView) findViewById((R.id.latitude_text));
-        mLongitudeText = (TextView) findViewById((R.id.longitude_text));
-        saveLocationToFirebase = (Button) findViewById(R.id.getLocation);
-        buildGoogleApiClient();
-
         packetDb = FirebaseDatabase.getInstance();
 
         dbReference = "Users/Patients/" + userId + "/Packets";
@@ -276,6 +267,16 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         packet.packetId = packetId;
 
         setPacket();
+
+        mapReference = "Users/Patients/" + userId + "/Packets/" + packetId + "/patientLocation";
+
+        FirebaseApp.initializeApp(this);
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mLocationDatabaseReference = mFirebaseDatabase.getReference(mapReference);
+        mLatitudeText = (TextView) findViewById((R.id.latitude_text));
+        mLongitudeText = (TextView) findViewById((R.id.longitude_text));
+        saveLocationToFirebase = (Button) findViewById(R.id.getLocation);
+        buildGoogleApiClient();
 
         conditionEt = (EditText) findViewById(R.id.editText4);
 
@@ -606,11 +607,12 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
             saveLocationToFirebase.setOnClickListener(new View.OnClickListener() {
 
-
                 @Override
                 public void onClick(View view) {
-                    mLocationDatabaseReference.push().setValue("Latitude : "+value_lat +"  & Longitude : "+value_lng);
-                    Toast.makeText(ConsultDoctorActivity.this ,"Location saved to the Firebasedatabase",Toast.LENGTH_LONG).show();
+                    UserLocation location = new UserLocation(value_lat, value_lng);
+                    packet.location = location;
+                    setPacket();
+                    Toast.makeText(ConsultDoctorActivity.this ,"Location saved", Toast.LENGTH_LONG).show();
                 }
             });
         }

@@ -3,6 +3,8 @@ package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.softwareapp.group9.doctorpatientapp.facilitiesnearme.UserLocation;
+
 import java.util.ArrayList;
 
 public class DataPacket {
@@ -15,6 +17,7 @@ public class DataPacket {
     public ArrayList<String> mediaReferences;
     public ArrayList<String> filesReferences;
     public int heartBeat;
+    public UserLocation location;
     public String docRecommendation;
 
     public DataPacket(){
