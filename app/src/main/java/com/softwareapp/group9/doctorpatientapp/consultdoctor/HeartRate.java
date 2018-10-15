@@ -2,6 +2,7 @@ package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
@@ -18,13 +19,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+
 import com.softwareapp.group9.doctorpatientapp.R;
 
 public class HeartRate extends AppCompatActivity {
-    //ViewRing mviewring;
+    ViewRing mviewring;
     Button saveBtn;
 
-    boolean camPermission = false;
     private static final AtomicBoolean process = new AtomicBoolean(false);
     private static final String TAG = "HeartRate";
 
@@ -59,9 +61,7 @@ public class HeartRate extends AppCompatActivity {
     private static final int[] AVERAGE_ARRAY = new int[AVERAGE_SIZE];
 
     private static int avgIndex = 0;
-
-
-
+    private static int avgBeat = 0;
 
 
     @Override
@@ -70,7 +70,7 @@ public class HeartRate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heartrate);
 
-        //mviewring = findViewById(R.id.viewring);
+        mviewring = findViewById(R.id.viewring);
         saveBtn = findViewById(R.id.saveBtn);
 
         previewV = findViewById(R.id.preview);
@@ -79,28 +79,19 @@ public class HeartRate extends AppCompatActivity {
         previewH.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         text = findViewById(R.id.text);
-        photo = findViewById(R.id.image);
+        photo = findViewById(R.id.photo);
+
 
         PowerManager powerManager = (PowerManager)getSystemService(Context.POWER_SERVICE);
         w = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "Don'tDimScreen");
 
-        if(ContextCompat.checkSelfPermission(HeartRate.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, 2);
-
-
-        }
-        else
-        {
-            Log.i("TEST","Granted");
-        }
-
-
-
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(HeartRate.this, ConsultDoctorActivity.class);
+                intent.putExtra("HeartBeat", "" + avgBeat);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -112,13 +103,9 @@ public class HeartRate extends AppCompatActivity {
         super.onResume();
 
         w.acquire();
+        cam = Camera.open();
+        startT = System.currentTimeMillis();
 
-
-        if(camPermission)
-        {
-            cam = Camera.open();
-            startT = System.currentTimeMillis();
-        }
 
 
 
@@ -134,16 +121,10 @@ public class HeartRate extends AppCompatActivity {
         super.onPause();
 
         w.release();
-
-        if(camPermission) {
-            cam.setPreviewCallback(null);
-
-            cam.stopPreview();
-
-            cam.release();
-
-            cam = null;
-        }
+        cam.setPreviewCallback(null);
+        cam.stopPreview();
+        cam.release();
+        cam = null;
     }
 
 
@@ -174,6 +155,18 @@ public class HeartRate extends AppCompatActivity {
                 return;
             }
 
+            int h = size.height;
+            int w = size.width;
+
+
+            int averageImage = ImageProcess.decodeToRedAvg(data.clone(), h, w);
+
+            if (averageImage == 255 ||averageImage == 0)
+            {
+                process.set(false);
+                return;
+            }
+
 
 
             int avgArrayCnt = 0;
@@ -189,26 +182,11 @@ public class HeartRate extends AppCompatActivity {
                 }
             }
 
-            int h = size.height;
-            int w = size.width;
 
 
-            int averageImage = ImageProcess.decodeToRedAvg(h, w, data.clone());
-            int rollingAvg = (avgArrayCnt > 0) ? (avgArrayAvg / avgArrayCnt) : 0;
-
-            if (averageImage == 255 ||averageImage == 0)
-            {
-                process.set(false);
-                return;
-            }
+            int rollingAvg = (avgArrayCnt>0) ? (avgArrayAvg/avgArrayCnt):0;
 
             TYPE nType = gType;
-
-            if (nType != gType)
-            {
-                gType = nType;
-                photo.postInvalidate();
-            }
 
             if (averageImage > rollingAvg)
             {
@@ -218,6 +196,7 @@ public class HeartRate extends AppCompatActivity {
             else if (averageImage < rollingAvg)
             {
                 nType = TYPE.RED;
+
                 if (nType != gType)
                 {
                     beats++;
@@ -230,15 +209,14 @@ public class HeartRate extends AppCompatActivity {
                 avgIndex = 0;
             }
 
-            if (averageImage == 255 ||averageImage == 0)
-            {
-                process.set(false);
-                return;
-            }
-
             AVERAGE_ARRAY[avgIndex] = averageImage;
-
             avgIndex++;
+
+            if (nType != gType)
+            {
+                gType = nType;
+                photo.postInvalidate();
+            }
 
 
             long eTime = System.currentTimeMillis();
@@ -268,18 +246,23 @@ public class HeartRate extends AppCompatActivity {
                 beatArray[beatIndex] = dpm;
                 beatIndex++;
 
-                for (int i = 0; i < beatArray.length; i++)
+                for (int j = 0; j < beatArray.length; j++)
                 {
-                    if (beatArray[i] > 0)
+                    if (beatArray[j] > 0)
                     {
-                        beatAAvg += beatArray[i];
+                        beatAAvg += beatArray[j];
                         beatACnt++;
                     }
                 }
 
-                int avgBeat = (beatAAvg / beatACnt);
+                avgBeat = (beatAAvg / beatACnt);
+                //avgBeat = 99;
 
+
+                Log.d(TAG, "heart rate recorded");
                 text.setText(String.valueOf(avgBeat));
+
+
                 startT = System.currentTimeMillis();
                 beats = 0;
                 stopCamera();
@@ -373,22 +356,5 @@ public class HeartRate extends AppCompatActivity {
     }
 
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d("HeartRate", "Request Permission");
-
-        if(requestCode == 2 && grantResults[0] != PackageManager.PERMISSION_GRANTED)
-        {
-            Log.d("HeartRate", "Permission Denied");
-        }
-        else
-        {
-            Log.d("HeartRate", "Permission Allowed");
-            camPermission = true;
-        }
-
-
-    }
 }
 
