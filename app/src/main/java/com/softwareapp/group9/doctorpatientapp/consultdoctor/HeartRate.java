@@ -255,8 +255,8 @@ public class HeartRate extends AppCompatActivity {
                     }
                 }
 
-                //avgBeat = (beatAAvg / beatACnt);
-                avgBeat = 99;
+                avgBeat = (beatAAvg / beatACnt);
+                //avgBeat = 99;
 
 
                 Log.d(TAG, "heart rate recorded");
