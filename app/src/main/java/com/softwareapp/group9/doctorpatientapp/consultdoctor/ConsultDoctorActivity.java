@@ -213,6 +213,10 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
     private EditText descriptionEt;
 
+    private TextView heartBeatTv;
+
+    private String heartRate;
+
 
 
     @Override
@@ -270,6 +274,12 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
         conditionEt = (EditText) findViewById(R.id.editText4);
 
         descriptionEt = (EditText) findViewById(R.id.editText3);
+
+        heartBeatTv = findViewById(R.id.heartBeatTv);
+
+        heartRate = getIntent().getStringExtra("HeartBeat");
+
+        heartBeatTv.setText(heartRate);
 
         setTitle("Consult Doctor");
 
@@ -431,8 +441,6 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
 
 
-
-
                 }
 
 
@@ -477,7 +485,9 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
 
                 String condition = conditionEt.getText().toString();
 
-                String description = conditionEt.getText().toString();
+                String description = descriptionEt.getText().toString();
+
+                String heartBeat = heartBeatTv.getText().toString();
 
                 if(TextUtils.isEmpty(condition)){
 
@@ -490,6 +500,8 @@ public class ConsultDoctorActivity extends AppCompatActivity implements Navigati
                     packet.condition = condition;
 
                     packet.description = description;
+
+                    packet.heartBeat = heartBeat;
 
                     databaseReference.child(packetId).setValue(packet);
 

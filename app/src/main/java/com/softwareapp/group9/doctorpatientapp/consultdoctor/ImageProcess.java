@@ -2,7 +2,7 @@ package com.softwareapp.group9.doctorpatientapp.consultdoctor;
 
 public class ImageProcess {
 
-    private static int decodeToRedSum(int h, int w, byte[] yuv420sp) {
+    private static int decodeToRedSum(byte[] yuv420sp, int w, int h) {
 
         if (yuv420sp == null)
         {
@@ -81,14 +81,14 @@ public class ImageProcess {
     }
 
 
-    public static int decodeToRedAvg(int h, int w, byte[] yuv420sp) {
+    public static int decodeToRedAvg(byte[] yuv420sp, int w, int h) {
 
         if (yuv420sp == null)
         {
             return 0;
         }
 
-        int total = decodeToRedSum(h, w, yuv420sp);
+        int total = decodeToRedSum(yuv420sp, w, h);
         final int frameSz = h * w;
 
         return (total / frameSz);

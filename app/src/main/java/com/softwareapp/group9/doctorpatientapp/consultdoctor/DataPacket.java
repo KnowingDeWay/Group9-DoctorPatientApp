@@ -14,18 +14,19 @@ public class DataPacket {
     public String description;
     public ArrayList<String> mediaReferences;
     public ArrayList<String> filesReferences;
-    public int heartBeat;
+    public String heartBeat;
 
     public DataPacket(){
 
     }
 
-    public DataPacket(String patientId, String doctorId, String condition, String description, ArrayList<String> mediaReferences, ArrayList<String> filesReferences){
+    public DataPacket(String patientId, String doctorId, String condition, String description, ArrayList<String> mediaReferences, ArrayList<String> filesReferences, String heartBeat){
         this.patientId = patientId;
         this.doctorId = doctorId;
         this.condition = condition;
         this.description = description;
         this.mediaReferences = mediaReferences;
         this.filesReferences = filesReferences;
+        this.heartBeat = heartBeat;
     }
 }
