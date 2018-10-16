@@ -202,6 +202,10 @@ public class DoctorProfileActivity extends AppCompatActivity implements Navigati
         switch(id) {
             case R.id.doctor_nav_profile: Intent intent3 = new Intent(this, DoctorProfileActivity.class); startActivity(intent3); break;
             case R.id.doctor_nav_view_patients: Intent intent4 = new Intent(this, DoctorViewPatients.class); startActivity(intent4); break;
+            case R.id.doctor_nav_recommendations_history:
+                Intent intent5 = new Intent(this, RecommendationsHistory.class);
+                startActivity(intent5);
+                break;
             case R.id.doctor_nav_logout:
                 Intent closingIntent = new Intent(getApplicationContext(), LaunchScreen.class);
                 closingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

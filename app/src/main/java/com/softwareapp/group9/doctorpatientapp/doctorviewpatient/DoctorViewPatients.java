@@ -84,27 +84,27 @@ public class DoctorViewPatients extends AppCompatActivity implements NavigationV
 
     private void initTest(){
         Log.d(TAG, "initTest: preparing test strings for recycler view.");
-        mPatientNames.add("wefsd");
-        mMedicalCondition.add("wfdscxzc");
-        mPatientNames.add("dfscx");
-        mMedicalCondition.add("dfavdscxdsa");
-        mPatientNames.add("ds");
-        mMedicalCondition.add("sdcsxx");
-        mPatientNames.add("w");
-        mMedicalCondition.add("rerty");
-        mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju");
-        mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju"); mPatientNames.add("w3ertg");
-        mMedicalCondition.add("aserafdhgyju");
+        mPatientNames.add("John");
+        mMedicalCondition.add("headache");
+        mPatientNames.add("Sara");
+        mMedicalCondition.add("stomache");
+        mPatientNames.add("Mark");
+        mMedicalCondition.add("vomiting");
+        mPatientNames.add("Mike");
+        mMedicalCondition.add("headache");
+        mPatientNames.add("Andre");
+        mMedicalCondition.add("eye");
+        mPatientNames.add("Nameer");
+        mMedicalCondition.add("arm"); mPatientNames.add("Wenrui");
+        mMedicalCondition.add("leg"); mPatientNames.add("Kenny");
+        mMedicalCondition.add("flu"); mPatientNames.add("Adib");
+        mMedicalCondition.add("fever"); mPatientNames.add("Ross");
+        mMedicalCondition.add("bone"); mPatientNames.add("Rachel");
+        mMedicalCondition.add("foot"); mPatientNames.add("Monica");
+        mMedicalCondition.add("fever"); mPatientNames.add("Angela");
+        mMedicalCondition.add("flu"); mPatientNames.add("Ten");
+        mMedicalCondition.add("headache"); mPatientNames.add("Rain");
+        mMedicalCondition.add("arm");
         initRecyclerView();
 
     }

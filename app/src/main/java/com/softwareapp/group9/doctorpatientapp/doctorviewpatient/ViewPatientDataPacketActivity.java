@@ -11,7 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
@@ -39,6 +42,13 @@ public class ViewPatientDataPacketActivity extends AppCompatActivity implements 
         navigationView = (NavigationView) findViewById(R.id.doctorNv);
         navigationView.setNavigationItemSelectedListener(this);
         setTitle("View Patients data packet");
+        Button btnrec = findViewById(R.id.btnRecommendations);
+        btnrec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ViewPatientDataPacketActivity.this, "Recommendations Uploaded", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         Log.d(TAG, "onCreate: started view patients data packet activity");
         getIncomingIntent();

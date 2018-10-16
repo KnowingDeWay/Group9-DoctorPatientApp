@@ -7,7 +7,7 @@
     <string name="add_medical_condition_edit_field_2">Description</string>
     <string name="add_medical_condition_cancel_button">Cancel</string>
     <string name="add_medical_condition_delete_button">Delete Condition</string>
-    <string name="default_nav_bar_text">Patient Name</string>
+    <string name="default_nav_bar_text">Welcome!</string>
     <string name="doctor_default_nav_bar_text">Doctor Name</string>
     <string name="menu_item_1_patient">Patient Profile</string>
     <string name="menu_item_2_patient">Medical Condition</string>

@@ -13,10 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.softwareapp.group9.doctorpatientapp.LoginActivity;
 import com.softwareapp.group9.doctorpatientapp.R;
+import com.softwareapp.group9.doctorpatientapp.consultdoctor.UploadActivity;
 import com.softwareapp.group9.doctorpatientapp.doctorviewpatient.DoctorViewPatients;
 import com.softwareapp.group9.doctorpatientapp.doctorviewpatient.RecyclerViewAdapter;
 import com.softwareapp.group9.doctorpatientapp.userprofile.DoctorProfileActivity;
@@ -51,6 +55,7 @@ public class RecommendationsHistory extends AppCompatActivity implements Navigat
         auth = FirebaseAuth.getInstance();
         setTitle("Recommendations History");
 
+
         initTest();
     }
     @Override
@@ -83,16 +88,16 @@ public class RecommendationsHistory extends AppCompatActivity implements Navigat
     }
     private void initTest(){
 
-        mPatientNames.add("wefsd");
+        mPatientNames.add("Andre");
         mRecommendations.add("Recom1");
-        mPatientNames.add("qawesdxz");
+        mPatientNames.add("Wenrui");
         mRecommendations.add("Recom2");
-        mPatientNames.add("esvdfgh");
+        mPatientNames.add("Kenny");
         mRecommendations.add("Recom3");
-        mPatientNames.add("dvfrtgh");
+        mPatientNames.add("Nameer");
         mRecommendations.add("Recom4");
 
-        mPatientNames.add("werthyujy");
+        mPatientNames.add("Adib");
         mRecommendations.add("Recom5");
         initRecyclerView();
 
